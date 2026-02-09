@@ -6,26 +6,19 @@
   <title>Toulon — Clock & Weather</title>
   <style>
     :root {
-      --glass: rgba(20, 28, 48, 0.45);
-      --glass-strong: rgba(20, 28, 48, 0.60);
-      --border: rgba(255, 255, 255, 0.12);
       --glass: rgba(16, 22, 40, 0.68);
       --glass-strong: rgba(16, 22, 40, 0.78);
       --border: rgba(255, 255, 255, 0.16);
       --text: #f5f7ff;
-      --muted: #cdd3ea;
-      --accent: #74d3ff;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
       --muted: #d4d9ee;
       --muted-strong: #e6ebf9;
       --accent: #86dcff;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
       --card-radius: 18px;
-      --card-gap: 18px;
-      --blur: blur(16px);
       --card-gap: 16px;
       --blur: blur(20px);
       --glow: 0 0 30px rgba(116, 211, 255, 0.2);
+
       --icon-stroke: #d8dee9;
       --icon-cloud: #c7d1e2;
       --icon-rain: #86dcff;
@@ -38,25 +31,21 @@
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      background: radial-gradient(circle at 20% 10%, #1b2a4a 0%, #0c1326 45%, #070b18 100%);
       background: radial-gradient(circle at 20% 10%, #16233f 0%, #0c1326 52%, #070b18 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* Subtle galaxy background */
     .galaxy {
       position: fixed;
       inset: 0;
       z-index: -2;
       background:
-        radial-gradient(800px 400px at 80% 20%, rgba(79, 98, 255, 0.25), transparent 70%),
-        radial-gradient(600px 300px at 20% 80%, rgba(255, 120, 180, 0.18), transparent 65%),
-        radial-gradient(400px 200px at 50% 40%, rgba(115, 220, 255, 0.14), transparent 70%);
         radial-gradient(780px 420px at 80% 10%, rgba(98, 120, 255, 0.16), transparent 72%),
         radial-gradient(680px 360px at 15% 88%, rgba(255, 120, 180, 0.12), transparent 75%),
         radial-gradient(520px 300px at 50% 40%, rgba(120, 230, 255, 0.12), transparent 76%),
@@ -68,7 +57,6 @@
       position: fixed;
       inset: 0;
       z-index: -1;
-      opacity: 0.6;
       opacity: 0.55;
     }
 
@@ -80,7 +68,6 @@
 
     .header {
       display: flex;
-      align-items: center;
       align-items: baseline;
       justify-content: space-between;
       margin-bottom: 18px;
@@ -88,7 +75,6 @@
     }
 
     .title {
-      font-size: 1.4rem;
       font-size: 1.45rem;
       font-weight: 600;
       letter-spacing: 0.4px;
@@ -104,15 +90,13 @@
       border: 1px solid rgba(255, 255, 255, 0.22);
       color: var(--muted-strong);
       font-size: 0.9rem;
-      color: var(--muted);
       font-weight: 650;
-      text-transform: none;
       letter-spacing: 0.2px;
+      white-space: nowrap;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
       grid-template-columns: 0.95fr 1.05fr;
       gap: 24px;
       align-items: start;
@@ -141,9 +125,7 @@
       box-shadow: 0 12px 34px rgba(0, 0, 0, 0.32);
     }
 
-    .left-col .card + .card {
-      margin-top: var(--card-gap);
-    }
+    .left-col .card + .card { margin-top: var(--card-gap); }
 
     .clock-wrap {
       display: grid;
@@ -152,13 +134,9 @@
     }
 
     .analog {
-      width: 240px;
-      height: 240px;
       width: 230px;
       height: 230px;
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.2);
       background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
       border: 1px solid rgba(255,255,255,0.22);
       position: relative;
@@ -169,17 +147,14 @@
       position: absolute;
       width: 2px;
       height: 10px;
-      background: rgba(255,255,255,0.5);
       background: rgba(255,255,255,0.45);
       top: 6px;
       left: 50%;
-      transform-origin: 50% 114px;
       transform-origin: 50% 110px;
     }
 
     .tick.major {
       height: 16px;
-      background: rgba(255,255,255,0.9);
       background: rgba(255,255,255,0.85);
     }
 
@@ -193,25 +168,20 @@
     }
 
     .hand.hour {
-      width: 70px;
       width: 66px;
       height: 6px;
-      background: linear-gradient(90deg, #fff, #74d3ff);
       background: linear-gradient(90deg, #fff, #9ad6ff);
     }
+
     .hand.minute {
-      width: 95px;
       width: 92px;
       height: 4px;
-      background: linear-gradient(90deg, #fff, #9be2ff);
       background: linear-gradient(90deg, #fff, #b8e6ff);
     }
+
     .hand.second {
-      width: 105px;
       width: 102px;
       height: 2px;
-      background: #ff7abf;
-      box-shadow: 0 0 10px rgba(255, 122, 191, 0.6);
       background: #ff8cc6;
       box-shadow: 0 0 10px rgba(255, 140, 198, 0.5);
     }
@@ -235,11 +205,11 @@
       font-weight: 600;
       letter-spacing: 0.3px;
       transform: translate(-50%, -50%);
+      user-select: none;
+      pointer-events: none;
     }
 
-    .digital {
-      text-align: center;
-    }
+    .digital { text-align: center; }
 
     .digital-time {
       font-size: 2.6rem;
@@ -283,19 +253,16 @@
     }
 
     .moon-icon {
-      font-size: 1.2rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 20px;
       height: 20px;
       margin-right: 6px;
+      flex: 0 0 auto;
     }
 
-    .mini-forecast {
-      display: grid;
-      gap: 12px;
-    }
+    .mini-forecast { display: grid; gap: 12px; }
 
     .mini-forecast-row {
       display: grid;
@@ -319,6 +286,7 @@
       font-size: 0.75rem;
       color: var(--muted-strong);
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .mini-temp {
@@ -347,14 +315,11 @@
 
     .weather-card {
       display: grid;
-      gap: 8px;
       gap: 6px;
       align-content: center;
     }
 
     .weather-title {
-      font-size: 0.95rem;
-      color: var(--muted);
       font-size: 0.9rem;
       color: var(--muted-strong);
       letter-spacing: 0.2px;
@@ -386,12 +351,10 @@
       align-items: center;
       justify-content: center;
       color: var(--icon-stroke);
+      flex: 0 0 auto;
     }
 
-    .metric-icon svg {
-      width: 18px;
-      height: 18px;
-    }
+    .metric-icon svg { width: 18px; height: 18px; }
 
     .metric-icon.sun { color: var(--icon-sun); }
     .metric-icon.cloud { color: var(--icon-cloud); }
@@ -413,11 +376,10 @@
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.18);
       color: var(--muted-strong);
+      white-space: nowrap;
     }
 
-    .badge.hidden {
-      display: none;
-    }
+    .badge.hidden { display: none; }
 
     .wind-direction {
       display: inline-flex;
@@ -437,15 +399,9 @@
       transform-origin: center;
     }
 
-    .wind-arrow svg {
-      width: 16px;
-      height: 16px;
-    }
+    .wind-arrow svg { width: 16px; height: 16px; }
 
-    .sparkline {
-      width: 100%;
-      height: 80px;
-    }
+    .sparkline { width: 100%; height: 80px; }
 
     .sparkline path,
     .sparkline polyline {
@@ -453,9 +409,7 @@
       stroke-width: 2;
     }
 
-    .sparkline .temp {
-      stroke: #74d3ff;
-    }
+    .sparkline .temp { stroke: #74d3ff; }
 
     .sparkline .precip {
       stroke: #7bdcff;
@@ -468,13 +422,10 @@
       align-items: center;
       justify-content: space-between;
       margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.85rem;
       gap: 12px;
     }
 
     .signature {
-      opacity: 0.7;
       opacity: 0.8;
       font-weight: 600;
       letter-spacing: 0.3px;
@@ -483,6 +434,7 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.14);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      white-space: nowrap;
     }
 
     .refresh-btn {
@@ -497,9 +449,7 @@
       font-weight: 600;
     }
 
-    .refresh-btn:hover {
-      background: rgba(255,255,255,0.2);
-    }
+    .refresh-btn:hover { background: rgba(255,255,255,0.2); }
 
     .data-unavailable {
       color: #ffb2c2;
@@ -507,23 +457,11 @@
     }
 
     @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .right-col {
-        max-width: 100%;
-        margin-left: 0;
-      }
-      .analog {
-        width: 210px;
-        height: 210px;
-      }
-      .mini-forecast-row {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      .layout { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .right-col { max-width: 100%; margin-left: 0; }
+      .analog { width: 210px; height: 210px; }
+      .mini-forecast-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -538,12 +476,9 @@
     </div>
 
     <div class="layout">
-      <!-- LEFT COLUMN -->
       <div class="left-col">
         <div class="card clock-wrap">
-          <div class="analog" id="analogClock">
-            <!-- clock ticks -->
-          </div>
+          <div class="analog" id="analogClock"></div>
           <div class="digital">
             <div class="digital-time">
               <span id="hh">00</span><span class="blink">:</span><span id="mm">00</span>
@@ -563,11 +498,12 @@
             <div id="sunset">--:--</div>
           </div>
           <div class="sun-moon-row">
-            <div><span class="moon-icon">🌙</span>Moon phase</div>
             <div>
               <span class="moon-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M15 3a8.5 8.5 0 1 0 6 14.5A9 9 0 0 1 15 3z" stroke="var(--icon-night)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M15 3a8.5 8.5 0 1 0 6 14.5A9 9 0 0 1 15 3z"
+                        stroke="var(--icon-night)" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               Moon phase
@@ -582,16 +518,15 @@
         </div>
       </div>
 
-      <!-- RIGHT COLUMN -->
-      <div>
       <div class="right-col">
         <div class="grid">
           <div class="card weather-card">
-            <div class="weather-title">Conditions</div>
             <div class="weather-title">
               <span class="metric-icon cloud" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M6 16h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 16z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 16h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 16z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               Conditions
@@ -603,12 +538,12 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Temperature</div>
             <div class="weather-title">
               <span class="metric-icon sun" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
-                  <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"
+                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
               </span>
               Temperature
@@ -618,11 +553,12 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Humidity</div>
             <div class="weather-title">
               <span class="metric-icon humidity" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M12 3s5 6 5 9a5 5 0 1 1-10 0c0-3 5-9 5-9z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 3s5 6 5 9a5 5 0 1 1-10 0c0-3 5-9 5-9z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               Humidity
@@ -632,7 +568,6 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Pressure</div>
             <div class="weather-title">
               <span class="metric-icon pressure" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -646,7 +581,6 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Wind</div>
             <div class="weather-title">
               <span class="metric-icon wind" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -657,8 +591,9 @@
               Wind
             </div>
             <div class="weather-value" id="wind">-- km/h</div>
-            <div class="weather-title">Gusts <span id="gusts">-- km/h</span></div>
-            <div class="weather-title">Gusts <span id="gusts">-- km/h</span> <span class="badge hidden" id="gustAlert">High</span></div>
+            <div class="weather-title">
+              Gusts <span id="gusts">-- km/h</span> <span class="badge hidden" id="gustAlert">High</span>
+            </div>
             <div class="wind-direction">
               <span class="wind-arrow" id="windArrow" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -671,7 +606,6 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">UV index</div>
             <div class="weather-title">
               <span class="metric-icon uv" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -685,11 +619,12 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Visibility</div>
             <div class="weather-title">
               <span class="metric-icon night" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M14 4a7 7 0 1 0 6 12A8 8 0 0 1 14 4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 4a7 7 0 1 0 6 12A8 8 0 0 1 14 4z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               Visibility
@@ -698,11 +633,12 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Cloud cover</div>
             <div class="weather-title">
               <span class="metric-icon cloud" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M6 16h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 16z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 16h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 16z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               Cloud cover
@@ -711,12 +647,14 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Precipitation probability</div>
             <div class="weather-title">
               <span class="metric-icon rain" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M6 12h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 12z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M8 16l-1 3M12 16l-1 3M16 16l-1 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M6 12h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 12z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8 16l-1 3M12 16l-1 3M16 16l-1 3"
+                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
               </span>
               Precipitation probability
@@ -725,12 +663,12 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Rain rate</div>
-            <div class="weather-value" id="rainRate">-- mm/h</div>
             <div class="weather-title">
               <span class="metric-icon rain" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M6 12h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 12z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 12h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 12z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M12 15v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
               </span>
@@ -740,7 +678,6 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">Air quality</div>
             <div class="weather-title">
               <span class="metric-icon wind" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -754,7 +691,6 @@
           </div>
 
           <div class="card weather-card">
-            <div class="weather-title">24h outlook</div>
             <div class="weather-title">
               <span class="metric-icon sun" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
@@ -773,7 +709,6 @@
         </div>
 
         <div class="card" id="statusCard" style="margin-top: var(--card-gap); display:none;">
-          <div class="data-unavailable">Data unavailable</div>
           <div class="data-unavailable">Weather temporarily unavailable</div>
         </div>
       </div>
@@ -786,9 +721,6 @@
   </div>
 
   <script>
-    // ==========================
-    // CONFIG
-    // ==========================
     const CITY = "Toulon";
     const LAT = 43.1242;
     const LON = 5.9280;
@@ -800,26 +732,16 @@
       air: null
     };
 
-    // ==========================
-    // UTILITIES
-    // ==========================
     const $ = (id) => document.getElementById(id);
 
-    function formatTime(date) {
-      return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
     function formatTimeHMFromParts(parts) {
       return `${parts.hour}:${parts.minute}`;
     }
 
-    function formatTimeHM(date) {
-      return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
     function formatDateLongFromParts(parts) {
       return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
     }
 
-    function formatDateLong(date) {
-      return date.toLocaleDateString("en-GB", {
-        weekday: "long", year: "numeric", month: "long", day: "2-digit"
     function getParisParts(date = new Date()) {
       const formatter = new Intl.DateTimeFormat("en-GB", {
         timeZone: TZ,
@@ -832,10 +754,12 @@
         day: "2-digit",
         hour12: false
       });
+
       const parts = formatter.formatToParts(date).reduce((acc, part) => {
         acc[part.type] = part.value;
         return acc;
       }, {});
+
       return parts;
     }
 
@@ -855,6 +779,7 @@
       return new Promise((resolve, reject) => {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
+
         fetch(url, { signal: controller.signal })
           .then((res) => {
             clearTimeout(timer);
@@ -874,7 +799,22 @@
           await new Promise(r => setTimeout(r, 800));
           return fetchWithRetry(url, retries - 1);
         }
-@@ -516,292 +852,389 @@
+        throw e;
+      }
+    }
+
+    function setDataUnavailable(show) {
+      $("statusCard").style.display = show ? "block" : "none";
+    }
+
+    function weatherLabel(code) {
+      const map = {
+        0: "Clear",
+        1: "Mainly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Depositing rime fog",
         51: "Light drizzle",
         53: "Drizzle",
         55: "Dense drizzle",
@@ -900,57 +840,32 @@
     }
 
     function weatherIcon(code) {
-      const icon = (svg) => svg;
-      // Colors: sun yellow, rain blue, clouds light gray, wind cyan, thunder violet, snow pale blue, fog gray
-      if ([0,1].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="12" fill="#FFD45A"/>
-          <g stroke="#FFD45A" stroke-width="3">
-            <line x1="32" y1="6" x2="32" y2="16"/>
-            <line x1="32" y1="48" x2="32" y2="58"/>
-            <line x1="6" y1="32" x2="16" y2="32"/>
-            <line x1="48" y1="32" x2="58" y2="32"/>
-            <line x1="14" y1="14" x2="21" y2="21"/>
-            <line x1="43" y1="43" x2="50" y2="50"/>
-            <line x1="14" y1="50" x2="21" y2="43"/>
-            <line x1="43" y1="21" x2="50" y2="14"/>
-          </g>
-        </svg>`);
       const stroke = "#d8dee9";
       const strokeSoft = "#c7cfdd";
       const sun = "#ffd36b";
       const rain = "#7bdcff";
       const night = "#bda8ff";
+
       if ([0, 1].includes(code)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="32" cy="32" r="10" stroke="${sun}" />
           <path d="M32 6v8M32 50v8M6 32h8M50 32h8M14 14l6 6M44 44l6 6M14 50l6-6M44 20l6-6" stroke="${sun}" />
         </svg>`;
       }
+
       if ([2].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <circle cx="24" cy="24" r="10" fill="#FFD45A"/>
-          <path d="M18 44h28a10 10 0 0 0 0-20 13 13 0 0 0-25-2A10 10 0 0 0 18 44z" fill="#D7DCE6"/>
-        </svg>`);
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="22" cy="22" r="8" stroke="${sun}" />
           <path d="M18 42h26a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 18 42z" />
         </svg>`;
       }
+
       if ([3].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M14 42h36a12 12 0 0 0 0-24 18 18 0 0 0-35-2A12 12 0 0 0 14 42z" fill="#D7DCE6"/>
-        </svg>`);
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M16 40h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 40z" />
         </svg>`;
       }
-      if ([45,48].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M12 30h40" stroke="#B7BDC9" stroke-width="4"/>
-          <path d="M8 40h48" stroke="#B7BDC9" stroke-width="4"/>
-          <path d="M16 50h32" stroke="#B7BDC9" stroke-width="4"/>
-        </svg>`);
+
       if ([45, 48].includes(code)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round">
           <path d="M12 26h40" />
@@ -958,15 +873,7 @@
           <path d="M16 46h32" />
         </svg>`;
       }
-      if ([51,53,55,61,63,65,80,81,82].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M16 32h32a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" fill="#D7DCE6"/>
-          <g stroke="#5BB6FF" stroke-width="3">
-            <line x1="22" y1="38" x2="18" y2="46"/>
-            <line x1="34" y1="38" x2="30" y2="46"/>
-            <line x1="46" y1="38" x2="42" y2="46"/>
-          </g>
-        </svg>`);
+
       if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
@@ -975,15 +882,7 @@
           <path d="M46 42l-4 8" stroke="${rain}" />
         </svg>`;
       }
-      if ([71,73,75,77,85,86].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M16 32h32a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" fill="#D7DCE6"/>
-          <g fill="#DFF4FF">
-            <circle cx="22" cy="42" r="2"/>
-            <circle cx="34" cy="44" r="2"/>
-            <circle cx="46" cy="42" r="2"/>
-          </g>
-        </svg>`);
+
       if ([71, 73, 75, 77, 85, 86].includes(code)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
@@ -992,21 +891,14 @@
           <circle cx="46" cy="44" r="2" />
         </svg>`;
       }
-      if ([95,96,99].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M16 30h32a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 30z" fill="#D7DCE6"/>
-          <polygon points="30,34 38,34 32,48 40,48 26,62 30,48 22,48" fill="#9C7BFF"/>
-        </svg>`);
+
       if ([95, 96, 99].includes(code)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M16 32h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" />
           <path d="M30 36l-6 12h8l-4 10 12-14h-8l4-8z" stroke="${night}" />
         </svg>`;
       }
-      return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="12" fill="#9BE2FF"/>
-        <text x="32" y="38" text-anchor="middle" font-size="18" fill="#0c1326">?</text>
-      </svg>`);
+
       return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="32" cy="32" r="10" />
         <path d="M26 32h12" />
@@ -1014,12 +906,11 @@
     }
 
     function moonPhaseName(date) {
-      // Simple moon phase calculation
-      const lp = 2551443; // lunar period in seconds
       const lp = 2551443;
       const newMoon = new Date("2001-01-24T13:35:00Z").getTime() / 1000;
       const now = date.getTime() / 1000;
       const phase = ((now - newMoon) % lp) / lp;
+
       if (phase < 0.03 || phase > 0.97) return "New Moon";
       if (phase < 0.22) return "Waxing Crescent";
       if (phase < 0.28) return "First Quarter";
@@ -1030,43 +921,51 @@
       return "Waning Crescent";
     }
 
-    // ==========================
-    // CLOCK
-    // ==========================
     function buildTicks() {
       const clock = $("analogClock");
+
       for (let i = 0; i < 60; i++) {
         const t = document.createElement("div");
         t.className = "tick" + (i % 5 === 0 ? " major" : "");
         t.style.transform = `rotate(${i * 6}deg) translateX(-50%)`;
         clock.appendChild(t);
       }
+
       const numbers = [
         { text: "12", angle: 0 },
         { text: "3", angle: 90 },
         { text: "6", angle: 180 },
         { text: "9", angle: 270 }
       ];
+
       numbers.forEach(({ text, angle }) => {
         const num = document.createElement("div");
         num.className = "clock-number";
+
         const radius = 92;
         const rad = (angle - 90) * (Math.PI / 180);
         const x = 115 + radius * Math.cos(rad);
         const y = 115 + radius * Math.sin(rad);
+
         num.style.left = `${x}px`;
         num.style.top = `${y}px`;
         num.textContent = text;
+
         clock.appendChild(num);
       });
+
       const hour = document.createElement("div");
       hour.className = "hand hour";
+
       const minute = document.createElement("div");
       minute.className = "hand minute";
+
       const second = document.createElement("div");
       second.className = "hand second";
+
       const dot = document.createElement("div");
       dot.className = "center-dot";
+
       clock.appendChild(hour);
       clock.appendChild(minute);
       clock.appendChild(second);
@@ -1074,21 +973,8 @@
     }
 
     function updateClock() {
-      const now = new Date();
-      const hh = now.getHours();
-      const mm = now.getMinutes();
-      const ss = now.getSeconds();
-
-      $("hh").textContent = String(hh).padStart(2, "0");
-      $("mm").textContent = String(mm).padStart(2, "0");
-      $("ss").textContent = String(ss).padStart(2, "0");
-      $("dateString").textContent = formatDateLong(now);
-      $("moonPhase").textContent = moonPhaseName(now);
-
-      const hourDeg = (hh % 12) * 30 + mm * 0.5;
-      const minDeg = mm * 6 + ss * 0.1;
-      const secDeg = ss * 6;
       const parts = getParisParts();
+
       $("hh").textContent = parts.hour;
       $("mm").textContent = parts.minute;
       $("ss").textContent = parts.second;
@@ -1097,6 +983,7 @@
       const hour = Number(parts.hour);
       const minute = Number(parts.minute);
       const second = Number(parts.second);
+
       const hourDeg = (hour % 12) * 30 + minute * 0.5;
       const minDeg = minute * 6 + second * 0.1;
       const secDeg = second * 6;
@@ -1110,13 +997,9 @@
       $("moonPhase").textContent = moonPhaseName(parisDate);
     }
 
-    // ==========================
-    // WEATHER
-    // ==========================
     async function loadWeather() {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
-        `&current=temperature_2m,apparent_temperature,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,cloud_cover,visibility,precipitation,precipitation_probability,weather_code,uv_index,is_day,rain` +
-        `&hourly=temperature_2m,precipitation_probability,precipitation` +
+      const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
         `&current=temperature_2m,apparent_temperature,relative_humidity_2m,dew_point_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,visibility,precipitation,precipitation_probability,weather_code,uv_index,is_day,rain` +
         `&hourly=temperature_2m,precipitation_probability,precipitation,weather_code` +
         `&daily=sunrise,sunset` +
@@ -1127,11 +1010,10 @@
         state.weather = data;
         renderWeather(data);
         setDataUnavailable(false);
-        $("lastUpdated").textContent = formatTimeHM(new Date());
+
         const parts = getParisParts();
         $("lastUpdated").textContent = formatTimeHMFromParts(parts);
       } catch (e) {
-        // Keep last known values if any
         if (!state.weather) setDataUnavailable(true);
       }
     }
@@ -1143,9 +1025,7 @@
         state.air = data;
         renderAirQuality(data);
       } catch (e) {
-        if (!state.air) {
-          $("airQuality").textContent = "Not available";
-        }
+        if (!state.air) $("airQuality").textContent = "Not available";
       }
     }
 
@@ -1155,10 +1035,10 @@
         $("airQuality").textContent = "Not available";
         return;
       }
+
       $("airQuality").textContent = `${aqi} AQI`;
-      if (state.weather?.current) {
-        updateAlerts(state.weather.current);
-      }
+
+      if (state.weather?.current) updateAlerts(state.weather.current);
     }
 
     function renderWeather(data) {
@@ -1168,8 +1048,10 @@
       $("temp").textContent = `${Math.round(c.temperature_2m)}°C`;
       $("feels").textContent = `${Math.round(c.apparent_temperature)}°C`;
       $("humidity").textContent = `${Math.round(c.relative_humidity_2m)}%`;
+
       const dewPointValue = Number.isFinite(c.dew_point_2m) ? Math.round(c.dew_point_2m) : 0;
       $("dewPoint").textContent = `${dewPointValue}°C`;
+
       $("pressure").textContent = `${Math.round(c.pressure_msl)} hPa`;
       $("wind").textContent = `${Math.round(c.wind_speed_10m)} km/h`;
       $("gusts").textContent = `${Math.round(c.wind_gusts_10m)} km/h`;
@@ -1178,7 +1060,6 @@
       $("clouds").textContent = `${Math.round(c.cloud_cover)}%`;
       $("precipProb").textContent = `${Math.round(c.precipitation_probability)}%`;
 
-      const rainRate = c.rain != null ? c.rain : c.precipitation;
       const rainRateRaw = c.rain ?? c.precipitation;
       const rainRate = Number.isFinite(rainRateRaw) ? rainRateRaw : 0;
       $("rainRate").textContent = `${rainRate.toFixed(1)} mm/h`;
@@ -1188,8 +1069,6 @@
 
       const sunrise = data.daily?.sunrise?.[0];
       const sunset = data.daily?.sunset?.[0];
-      $("sunrise").textContent = sunrise ? formatTimeHM(new Date(sunrise)) : "--:--";
-      $("sunset").textContent = sunset ? formatTimeHM(new Date(sunset)) : "--:--";
       $("sunrise").textContent = sunrise ? formatTimeHMFromParts(getParisParts(new Date(sunrise))) : "--:--";
       $("sunset").textContent = sunset ? formatTimeHMFromParts(getParisParts(new Date(sunset))) : "--:--";
 
@@ -1235,22 +1114,27 @@
       const temps = data.hourly?.temperature_2m || [];
       const probs = data.hourly?.precipitation_probability || [];
       const codes = data.hourly?.weather_code || [];
-      const sunrise = data.daily?.sunrise?.[0] ? new Date(data.daily.sunrise[0]) : null;
 
+      const sunrise = data.daily?.sunrise?.[0] ? new Date(data.daily.sunrise[0]) : null;
       const currentTime = data.current?.time;
+
       if (!currentTime || !times.length) return;
 
       const startIndex = times.findIndex((t) => t === currentTime);
       const index = startIndex >= 0 ? startIndex : 0;
+
       const sliceTimes = times.slice(index, index + 6);
 
       sliceTimes.forEach((time, i) => {
         const timeDate = new Date(time);
         const parts = getParisParts(timeDate);
-        const label = i === 0 ? "Now" : `${parts.hour}h`;
+
+        const label = i === 0 ? "Now" : `${parts.hour} h`;
+
         const temp = temps[index + i];
         const prob = probs[index + i];
         const code = codes[index + i];
+
         const item = document.createElement("div");
         item.className = "mini-item";
         item.innerHTML = `
@@ -1259,6 +1143,7 @@
           <div class="mini-temp">${Math.round(temp)}°</div>
           ${Number.isFinite(prob) ? `<div class="mini-precip">${Math.round(prob)}%</div>` : `<div class="mini-precip">&nbsp;</div>`}
         `;
+
         if (sunrise) {
           const sunriseHour = getParisParts(sunrise).hour;
           if (parts.hour === sunriseHour) {
@@ -1268,6 +1153,7 @@
             item.appendChild(marker);
           }
         }
+
         container.appendChild(item);
       });
     }
@@ -1276,10 +1162,13 @@
       const uvAlert = $("uvAlert");
       const gustAlert = $("gustAlert");
       const aqiAlert = $("aqiAlert");
+
       const uvValue = Number(current.uv_index);
       const gustValue = Number(current.wind_gusts_10m);
+
       uvAlert.classList.toggle("hidden", !(uvValue > 6));
       gustAlert.classList.toggle("hidden", !(gustValue > 40));
+
       if (state.air?.current?.us_aqi != null) {
         aqiAlert.classList.toggle("hidden", !(Number(state.air.current.us_aqi) > 100));
       } else {
@@ -1305,19 +1194,16 @@
       $("windDir").textContent = `${degToCompass(deg)} • ${Math.round(deg)}°`;
     }
 
-    // ==========================
-    // STARS CANVAS (SUBTLE)
-    // ==========================
     function initStars() {
       const canvas = $("stars");
       const ctx = canvas.getContext("2d");
+
       let w, h;
       const stars = Array.from({ length: 80 }, () => ({
         x: Math.random(),
         y: Math.random(),
         r: Math.random() * 1.2 + 0.2,
         alpha: Math.random() * 0.6 + 0.2,
-        drift: (Math.random() - 0.5) * 0.0002
         drift: (Math.random() - 0.5) * 0.00015
       }));
 
@@ -1325,6 +1211,7 @@
         w = canvas.width = window.innerWidth;
         h = canvas.height = window.innerHeight;
       }
+
       window.addEventListener("resize", resize);
       resize();
 
@@ -1334,6 +1221,7 @@
           s.y += s.drift;
           if (s.y < 0) s.y = 1;
           if (s.y > 1) s.y = 0;
+
           ctx.beginPath();
           ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
           ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
@@ -1341,5 +1229,31 @@
         }
         requestAnimationFrame(draw);
       }
+
       draw();
     }
+
+    function init() {
+      document.querySelector(".title").textContent = `${CITY}, France`;
+
+      buildTicks();
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      loadWeather();
+      loadAirQuality();
+      setInterval(loadWeather, REFRESH_MS);
+      setInterval(loadAirQuality, REFRESH_MS);
+
+      $("refreshBtn").addEventListener("click", () => {
+        loadWeather();
+        loadAirQuality();
+      });
+
+      initStars();
+    }
+
+    init();
+  </script>
+</body>
+</html>
