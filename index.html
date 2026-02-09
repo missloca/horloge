@@ -6,16 +6,17 @@
   <title>Toulon — Clock & Weather</title>
   <style>
     :root {
-      --glass: rgba(20, 28, 48, 0.45);
-      --glass-strong: rgba(20, 28, 48, 0.60);
-      --border: rgba(255, 255, 255, 0.12);
+      --glass: rgba(20, 28, 48, 0.55);
+      --glass-strong: rgba(20, 28, 48, 0.68);
+      --border: rgba(255, 255, 255, 0.14);
       --text: #f5f7ff;
-      --muted: #cdd3ea;
+      --muted: #d4d9ee;
+      --muted-strong: #e1e6f6;
       --accent: #74d3ff;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
       --card-radius: 18px;
-      --card-gap: 18px;
-      --blur: blur(16px);
+      --card-gap: 16px;
+      --blur: blur(18px);
       --glow: 0 0 30px rgba(116, 211, 255, 0.2);
     }
 
@@ -24,7 +25,7 @@
       margin: 0;
       font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      background: radial-gradient(circle at 20% 10%, #1b2a4a 0%, #0c1326 45%, #070b18 100%);
+      background: radial-gradient(circle at 20% 10%, #192645 0%, #0c1326 50%, #070b18 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -35,16 +36,16 @@
       inset: 0;
       z-index: -2;
       background:
-        radial-gradient(800px 400px at 80% 20%, rgba(79, 98, 255, 0.25), transparent 70%),
-        radial-gradient(600px 300px at 20% 80%, rgba(255, 120, 180, 0.18), transparent 65%),
-        radial-gradient(400px 200px at 50% 40%, rgba(115, 220, 255, 0.14), transparent 70%);
+        radial-gradient(700px 360px at 80% 15%, rgba(79, 98, 255, 0.18), transparent 70%),
+        radial-gradient(600px 320px at 20% 85%, rgba(255, 120, 180, 0.14), transparent 70%),
+        radial-gradient(420px 220px at 55% 45%, rgba(115, 220, 255, 0.12), transparent 72%);
     }
 
     canvas#stars {
       position: fixed;
       inset: 0;
       z-index: -1;
-      opacity: 0.6;
+      opacity: 0.55;
     }
 
     .container {
@@ -55,20 +56,31 @@
 
     .header {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
       margin-bottom: 18px;
+      gap: 12px;
     }
 
     .title {
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       font-weight: 600;
       letter-spacing: 0.4px;
     }
 
     .last-updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: var(--muted-strong);
       font-size: 0.9rem;
-      color: var(--muted);
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0.2px;
     }
 
     .layout {
@@ -87,6 +99,7 @@
       -webkit-backdrop-filter: var(--blur);
       padding: 18px 20px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: 96px;
     }
 
     .card:hover {
@@ -101,14 +114,15 @@
     .clock-wrap {
       display: grid;
       place-items: center;
+      gap: 14px;
     }
 
     .analog {
-      width: 240px;
-      height: 240px;
+      width: 230px;
+      height: 230px;
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.2);
+      background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.22);
       position: relative;
       box-shadow: var(--glow);
     }
@@ -117,15 +131,15 @@
       position: absolute;
       width: 2px;
       height: 10px;
-      background: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.45);
       top: 6px;
       left: 50%;
-      transform-origin: 50% 114px;
+      transform-origin: 50% 110px;
     }
 
     .tick.major {
       height: 16px;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.85);
     }
 
     .hand {
@@ -138,20 +152,20 @@
     }
 
     .hand.hour {
-      width: 70px;
+      width: 66px;
       height: 6px;
-      background: linear-gradient(90deg, #fff, #74d3ff);
+      background: linear-gradient(90deg, #fff, #9ad6ff);
     }
     .hand.minute {
-      width: 95px;
+      width: 92px;
       height: 4px;
-      background: linear-gradient(90deg, #fff, #9be2ff);
+      background: linear-gradient(90deg, #fff, #b8e6ff);
     }
     .hand.second {
-      width: 105px;
+      width: 102px;
       height: 2px;
-      background: #ff7abf;
-      box-shadow: 0 0 10px rgba(255, 122, 191, 0.6);
+      background: #ff8cc6;
+      box-shadow: 0 0 10px rgba(255, 140, 198, 0.5);
     }
 
     .center-dot {
@@ -207,11 +221,59 @@
       align-items: center;
       justify-content: space-between;
       font-size: 0.95rem;
+      color: var(--muted-strong);
     }
 
     .moon-icon {
       font-size: 1.2rem;
       margin-right: 6px;
+    }
+
+    .mini-forecast {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-forecast-row {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .mini-item {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      padding: 10px 8px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .mini-time {
+      font-size: 0.75rem;
+      color: var(--muted-strong);
+      font-weight: 600;
+    }
+
+    .mini-temp {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .mini-precip {
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    .mini-marker {
+      font-size: 0.65rem;
+      color: #ffd36b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     .grid {
@@ -222,12 +284,14 @@
 
     .weather-card {
       display: grid;
-      gap: 8px;
+      gap: 6px;
+      align-content: center;
     }
 
     .weather-title {
-      font-size: 0.95rem;
-      color: var(--muted);
+      font-size: 0.9rem;
+      color: var(--muted-strong);
+      letter-spacing: 0.2px;
     }
 
     .weather-value {
@@ -243,6 +307,7 @@
 
     .condition-text {
       font-weight: 600;
+      font-size: 1.05rem;
     }
 
     .sparkline {
@@ -271,12 +336,18 @@
       align-items: center;
       justify-content: space-between;
       margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.85rem;
+      gap: 12px;
     }
 
     .signature {
-      opacity: 0.7;
+      opacity: 0.8;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: var(--muted-strong);
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .refresh-btn {
@@ -288,6 +359,7 @@
       cursor: pointer;
       transition: background 0.2s ease;
       font-size: 0.85rem;
+      font-weight: 600;
     }
 
     .refresh-btn:hover {
@@ -309,6 +381,9 @@
       .analog {
         width: 210px;
         height: 210px;
+      }
+      .mini-forecast-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
   </style>
@@ -352,6 +427,11 @@
             <div><span class="moon-icon">🌙</span>Moon phase</div>
             <div id="moonPhase">--</div>
           </div>
+        </div>
+
+        <div class="card mini-forecast">
+          <div class="weather-title">Next 6 hours</div>
+          <div class="mini-forecast-row" id="miniForecast"></div>
         </div>
       </div>
 
@@ -410,7 +490,7 @@
 
           <div class="card weather-card">
             <div class="weather-title">Rain rate</div>
-            <div class="weather-value" id="rainRate">-- mm/h</div>
+            <div class="weather-value" id="rainRate">0.0 mm/h</div>
           </div>
 
           <div class="card weather-card">
@@ -460,18 +540,43 @@
     // ==========================
     const $ = (id) => document.getElementById(id);
 
-    function formatTime(date) {
-      return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+    function formatTimeHMFromParts(parts) {
+      return `${parts.hour}:${parts.minute}`;
     }
 
-    function formatTimeHM(date) {
-      return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+    function formatDateLongFromParts(parts) {
+      return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
     }
 
-    function formatDateLong(date) {
-      return date.toLocaleDateString("en-GB", {
-        weekday: "long", year: "numeric", month: "long", day: "2-digit"
+    function getParisParts(date = new Date()) {
+      const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: TZ,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        hour12: false
       });
+      const parts = formatter.formatToParts(date).reduce((acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      }, {});
+      return parts;
+    }
+
+    function getParisDateObject(parts) {
+      const monthIndex = new Date(`${parts.month} 1, 2000`).getMonth();
+      return new Date(Date.UTC(
+        Number(parts.year),
+        monthIndex,
+        Number(parts.day),
+        Number(parts.hour),
+        Number(parts.minute),
+        Number(parts.second)
+      ));
     }
 
     function fetchWithTimeout(url, timeout = 8000) {
@@ -538,76 +643,65 @@
     }
 
     function weatherIcon(code) {
-      const icon = (svg) => svg;
-      // Colors: sun yellow, rain blue, clouds light gray, wind cyan, thunder violet, snow pale blue, fog gray
-      if ([0,1].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="12" fill="#FFD45A"/>
-          <g stroke="#FFD45A" stroke-width="3">
-            <line x1="32" y1="6" x2="32" y2="16"/>
-            <line x1="32" y1="48" x2="32" y2="58"/>
-            <line x1="6" y1="32" x2="16" y2="32"/>
-            <line x1="48" y1="32" x2="58" y2="32"/>
-            <line x1="14" y1="14" x2="21" y2="21"/>
-            <line x1="43" y1="43" x2="50" y2="50"/>
-            <line x1="14" y1="50" x2="21" y2="43"/>
-            <line x1="43" y1="21" x2="50" y2="14"/>
-          </g>
-        </svg>`);
+      const stroke = "#d8dee9";
+      const strokeSoft = "#c7cfdd";
+      const sun = "#ffd36b";
+      const rain = "#7bdcff";
+      const night = "#bda8ff";
+      if ([0, 1].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="32" cy="32" r="10" stroke="${sun}" />
+          <path d="M32 6v8M32 50v8M6 32h8M50 32h8M14 14l6 6M44 44l6 6M14 50l6-6M44 20l6-6" stroke="${sun}" />
+        </svg>`;
       }
       if ([2].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <circle cx="24" cy="24" r="10" fill="#FFD45A"/>
-          <path d="M18 44h28a10 10 0 0 0 0-20 13 13 0 0 0-25-2A10 10 0 0 0 18 44z" fill="#D7DCE6"/>
-        </svg>`);
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="22" cy="22" r="8" stroke="${sun}" />
+          <path d="M18 42h26a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 18 42z" />
+        </svg>`;
       }
       if ([3].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M14 42h36a12 12 0 0 0 0-24 18 18 0 0 0-35-2A12 12 0 0 0 14 42z" fill="#D7DCE6"/>
-        </svg>`);
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 40h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 40z" />
+        </svg>`;
       }
-      if ([45,48].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M12 30h40" stroke="#B7BDC9" stroke-width="4"/>
-          <path d="M8 40h48" stroke="#B7BDC9" stroke-width="4"/>
-          <path d="M16 50h32" stroke="#B7BDC9" stroke-width="4"/>
-        </svg>`);
+      if ([45, 48].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round">
+          <path d="M12 26h40" />
+          <path d="M8 36h48" />
+          <path d="M16 46h32" />
+        </svg>`;
       }
-      if ([51,53,55,61,63,65,80,81,82].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M16 32h32a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" fill="#D7DCE6"/>
-          <g stroke="#5BB6FF" stroke-width="3">
-            <line x1="22" y1="38" x2="18" y2="46"/>
-            <line x1="34" y1="38" x2="30" y2="46"/>
-            <line x1="46" y1="38" x2="42" y2="46"/>
-          </g>
-        </svg>`);
+      if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
+          <path d="M22 42l-4 8" stroke="${rain}" />
+          <path d="M34 42l-4 8" stroke="${rain}" />
+          <path d="M46 42l-4 8" stroke="${rain}" />
+        </svg>`;
       }
-      if ([71,73,75,77,85,86].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M16 32h32a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" fill="#D7DCE6"/>
-          <g fill="#DFF4FF">
-            <circle cx="22" cy="42" r="2"/>
-            <circle cx="34" cy="44" r="2"/>
-            <circle cx="46" cy="42" r="2"/>
-          </g>
-        </svg>`);
+      if ([71, 73, 75, 77, 85, 86].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
+          <circle cx="22" cy="44" r="2" />
+          <circle cx="34" cy="46" r="2" />
+          <circle cx="46" cy="44" r="2" />
+        </svg>`;
       }
-      if ([95,96,99].includes(code)) {
-        return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-          <path d="M16 30h32a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 30z" fill="#D7DCE6"/>
-          <polygon points="30,34 38,34 32,48 40,48 26,62 30,48 22,48" fill="#9C7BFF"/>
-        </svg>`);
+      if ([95, 96, 99].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 32h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" />
+          <path d="M30 36l-6 12h8l-4 10 12-14h-8l4-8z" stroke="${night}" />
+        </svg>`;
       }
-      return icon(`<svg width="40" height="40" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="12" fill="#9BE2FF"/>
-        <text x="32" y="38" text-anchor="middle" font-size="18" fill="#0c1326">?</text>
-      </svg>`);
+      return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="32" cy="32" r="10" />
+        <path d="M26 32h12" />
+      </svg>`;
     }
 
     function moonPhaseName(date) {
-      // Simple moon phase calculation
-      const lp = 2551443; // lunar period in seconds
+      const lp = 2551443;
       const newMoon = new Date("2001-01-24T13:35:00Z").getTime() / 1000;
       const now = date.getTime() / 1000;
       const phase = ((now - newMoon) % lp) / lp;
@@ -647,25 +741,26 @@
     }
 
     function updateClock() {
-      const now = new Date();
-      const hh = now.getHours();
-      const mm = now.getMinutes();
-      const ss = now.getSeconds();
+      const parts = getParisParts();
+      $("hh").textContent = parts.hour;
+      $("mm").textContent = parts.minute;
+      $("ss").textContent = parts.second;
+      $("dateString").textContent = formatDateLongFromParts(parts);
 
-      $("hh").textContent = String(hh).padStart(2, "0");
-      $("mm").textContent = String(mm).padStart(2, "0");
-      $("ss").textContent = String(ss).padStart(2, "0");
-      $("dateString").textContent = formatDateLong(now);
-      $("moonPhase").textContent = moonPhaseName(now);
-
-      const hourDeg = (hh % 12) * 30 + mm * 0.5;
-      const minDeg = mm * 6 + ss * 0.1;
-      const secDeg = ss * 6;
+      const hour = Number(parts.hour);
+      const minute = Number(parts.minute);
+      const second = Number(parts.second);
+      const hourDeg = (hour % 12) * 30 + minute * 0.5;
+      const minDeg = minute * 6 + second * 0.1;
+      const secDeg = second * 6;
 
       const hands = document.querySelectorAll(".hand");
       hands[0].style.transform = `rotate(${hourDeg - 90}deg)`;
       hands[1].style.transform = `rotate(${minDeg - 90}deg)`;
       hands[2].style.transform = `rotate(${secDeg - 90}deg)`;
+
+      const parisDate = getParisDateObject(parts);
+      $("moonPhase").textContent = moonPhaseName(parisDate);
     }
 
     // ==========================
@@ -674,7 +769,7 @@
     async function loadWeather() {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
         `&current=temperature_2m,apparent_temperature,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,cloud_cover,visibility,precipitation,precipitation_probability,weather_code,uv_index,is_day,rain` +
-        `&hourly=temperature_2m,precipitation_probability,precipitation` +
+        `&hourly=temperature_2m,precipitation_probability,precipitation,weather_code` +
         `&daily=sunrise,sunset` +
         `&timezone=${encodeURIComponent(TZ)}`;
 
@@ -683,9 +778,9 @@
         state.weather = data;
         renderWeather(data);
         setDataUnavailable(false);
-        $("lastUpdated").textContent = formatTimeHM(new Date());
+        const parts = getParisParts();
+        $("lastUpdated").textContent = formatTimeHMFromParts(parts);
       } catch (e) {
-        // Keep last known values if any
         if (!state.weather) setDataUnavailable(true);
       }
     }
@@ -727,7 +822,8 @@
       $("clouds").textContent = `${Math.round(c.cloud_cover)}%`;
       $("precipProb").textContent = `${Math.round(c.precipitation_probability)}%`;
 
-      const rainRate = c.rain != null ? c.rain : c.precipitation;
+      const rainRateRaw = c.rain ?? c.precipitation;
+      const rainRate = Number.isFinite(rainRateRaw) ? rainRateRaw : 0;
       $("rainRate").textContent = `${rainRate.toFixed(1)} mm/h`;
 
       $("conditionText").textContent = weatherLabel(c.weather_code);
@@ -735,10 +831,11 @@
 
       const sunrise = data.daily?.sunrise?.[0];
       const sunset = data.daily?.sunset?.[0];
-      $("sunrise").textContent = sunrise ? formatTimeHM(new Date(sunrise)) : "--:--";
-      $("sunset").textContent = sunset ? formatTimeHM(new Date(sunset)) : "--:--";
+      $("sunrise").textContent = sunrise ? formatTimeHMFromParts(getParisParts(new Date(sunrise))) : "--:--";
+      $("sunset").textContent = sunset ? formatTimeHMFromParts(getParisParts(new Date(sunset))) : "--:--";
 
       renderSparkline(data);
+      renderMiniForecast(data);
     }
 
     function renderSparkline(data) {
@@ -767,6 +864,51 @@
       $("precipLine").setAttribute("points", probPoints);
     }
 
+    function renderMiniForecast(data) {
+      const container = $("miniForecast");
+      container.innerHTML = "";
+
+      const times = data.hourly?.time || [];
+      const temps = data.hourly?.temperature_2m || [];
+      const probs = data.hourly?.precipitation_probability || [];
+      const codes = data.hourly?.weather_code || [];
+      const sunrise = data.daily?.sunrise?.[0] ? new Date(data.daily.sunrise[0]) : null;
+
+      const currentTime = data.current?.time;
+      if (!currentTime || !times.length) return;
+
+      const startIndex = times.findIndex((t) => t === currentTime);
+      const index = startIndex >= 0 ? startIndex : 0;
+      const sliceTimes = times.slice(index, index + 6);
+
+      sliceTimes.forEach((time, i) => {
+        const timeDate = new Date(time);
+        const parts = getParisParts(timeDate);
+        const label = i === 0 ? "Now" : parts.hour;
+        const temp = temps[index + i];
+        const prob = probs[index + i];
+        const code = codes[index + i];
+        const item = document.createElement("div");
+        item.className = "mini-item";
+        item.innerHTML = `
+          <div class="mini-time">${label}</div>
+          <div>${weatherIcon(code)}</div>
+          <div class="mini-temp">${Math.round(temp)}°</div>
+          ${Number.isFinite(prob) ? `<div class="mini-precip">${Math.round(prob)}%</div>` : `<div class="mini-precip">&nbsp;</div>`}
+        `;
+        if (sunrise) {
+          const sunriseHour = getParisParts(sunrise).hour;
+          if (parts.hour === sunriseHour) {
+            const marker = document.createElement("div");
+            marker.className = "mini-marker";
+            marker.textContent = "Sunrise";
+            item.appendChild(marker);
+          }
+        }
+        container.appendChild(item);
+      });
+    }
+
     // ==========================
     // STARS CANVAS (SUBTLE)
     // ==========================
@@ -779,7 +921,7 @@
         y: Math.random(),
         r: Math.random() * 1.2 + 0.2,
         alpha: Math.random() * 0.6 + 0.2,
-        drift: (Math.random() - 0.5) * 0.0002
+        drift: (Math.random() - 0.5) * 0.00015
       }));
 
       function resize() {
