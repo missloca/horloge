@@ -48,13 +48,14 @@
       inset: 0;
       z-index: -2;
       background:
-        radial-gradient(900px 520px at 78% 8%, rgba(120, 140, 255, 0.18), transparent 78%),
-        radial-gradient(820px 440px at 12% 86%, rgba(255, 120, 200, 0.14), transparent 80%),
-        radial-gradient(620px 380px at 48% 38%, rgba(110, 230, 255, 0.12), transparent 82%),
-        radial-gradient(620px 360px at 22% 28%, rgba(210, 120, 255, 0.12), transparent 84%),
-        radial-gradient(520px 300px at 72% 70%, rgba(255, 90, 90, 0.1), transparent 86%),
+        radial-gradient(900px 520px at 78% 8%, rgba(120, 140, 255, 0.22), transparent 78%),
+        radial-gradient(900px 480px at 12% 86%, rgba(255, 90, 200, 0.18), transparent 80%),
+        radial-gradient(620px 380px at 48% 38%, rgba(110, 230, 255, 0.16), transparent 82%),
+        radial-gradient(620px 360px at 22% 28%, rgba(210, 120, 255, 0.18), transparent 84%),
+        radial-gradient(560px 320px at 72% 70%, rgba(255, 80, 120, 0.16), transparent 86%),
+        radial-gradient(700px 420px at 62% 18%, rgba(214, 74, 255, 0.16), transparent 82%),
         radial-gradient(1200px 800px at 50% 50%, rgba(10, 14, 30, 0.9), rgba(5, 7, 16, 0.98));
-      filter: saturate(1.1);
+      filter: saturate(1.2);
     }
 
     canvas#stars {
@@ -265,7 +266,7 @@
     }
 
     .sun-moon-card {
-      max-width: 360px;
+      max-width: 320px;
       width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -411,8 +412,9 @@
     .condition-icon {
       width: 44px;
       height: 44px;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex: 0 0 44px;
     }
 
@@ -422,9 +424,45 @@
     }
 
     .condition-text {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
       font-weight: 600;
       font-size: 1.05rem;
       color: var(--accent);
+    }
+
+    .sun-progress {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sun-progress-bar {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      overflow: hidden;
+    }
+
+    .sun-progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(255, 211, 107, 0.35), rgba(127, 231, 255, 0.6));
+      box-shadow: 0 0 12px rgba(127, 231, 255, 0.3);
+      border-radius: inherit;
+      transition: width 0.6s ease;
+    }
+
+    .sun-progress-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--muted-strong);
+      gap: 8px;
     }
 
     .metric-icon {
@@ -525,36 +563,39 @@
     }
 
     .signature-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: var(--accent-secondary);
-      box-shadow: 0 0 8px rgba(180, 140, 255, 0.6);
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(127, 231, 255, 0.6);
     }
 
     .refresh-btn {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      font-size: 0.85rem;
+      background: rgba(127, 231, 255, 0.15);
+      border: 1px solid rgba(127, 231, 255, 0.3);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 8px 18px;
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .refresh-btn:hover { background: rgba(255,255,255,0.2); }
+    .refresh-btn:hover {
+      background: rgba(127, 231, 255, 0.25);
+      box-shadow: 0 0 12px rgba(127, 231, 255, 0.25);
+    }
 
     .status-card {
       display: grid;
       gap: 6px;
-      color: var(--muted-strong);
+      text-align: center;
     }
 
     .status-title {
+      font-size: 1rem;
       font-weight: 600;
-      color: var(--accent-secondary);
+      color: var(--muted-strong);
     }
 
     .status-details {
@@ -635,6 +676,19 @@
           <div class="weather-value" id="summaryTemp">—</div>
           <div class="weather-subtitle">Max rain chance <span id="summaryRain">—</span></div>
         </div>
+
+        <div class="card weather-card">
+          <div class="weather-title">Sun progress</div>
+          <div class="sun-progress">
+            <div class="sun-progress-bar">
+              <div class="sun-progress-fill" id="sunProgressFill"></div>
+            </div>
+            <div class="sun-progress-meta">
+              <span id="sunProgressLabel">—</span>
+              <span id="sunProgressRange">—</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="right-col">
@@ -660,9 +714,9 @@
             <div class="weather-title">
               <span class="metric-icon sun" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
-                  <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"
-                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M12 3v11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <circle cx="12" cy="17" r="4" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M12 14v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
                 </svg>
               </span>
               Temperature
@@ -741,9 +795,8 @@
             <div class="weather-title">
               <span class="metric-icon night" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M14 4a7 7 0 1 0 6 12A8 8 0 0 1 14 4z"
-                        stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 4a7 7 0 1 0 4 12A6.2 6.2 0 0 1 16 4z"
+                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
               Visibility
@@ -830,7 +883,7 @@
         <div class="card" id="statusCard" style="margin-top: var(--card-gap); display:none;">
           <div class="status-card">
             <div class="status-title">Weather temporarily unavailable</div>
-            <div class="status-details" id="statusDetails">Trying again soon.</div>
+            <div class="status-details" id="statusDetails"></div>
           </div>
         </div>
       </div>
@@ -843,10 +896,11 @@
   </div>
 
   <script>
-    const CITY = "Toulon";
-    const LAT = 43.1242;
-    const LON = 5.9280;
-    const TZ = "Europe/Paris";
+    let CITY = "Toulon";
+    let COUNTRY = "France";
+    let LAT = 43.1242;
+    let LON = 5.9280;
+    let TZ = "Europe/Paris";
     const REFRESH_MS = 10 * 60 * 1000;
 
     const state = {
@@ -891,7 +945,7 @@
       return `${hour12}${suffix}`;
     }
 
-    function getParisParts(date = new Date()) {
+    function getLocalParts(date = new Date()) {
       const formatter = new Intl.DateTimeFormat("en-GB", {
         timeZone: TZ,
         hour: "2-digit",
@@ -913,7 +967,8 @@
       return parts;
     }
 
-    function getParisDateObject(parts) {
+    function getLocalDateObject(parts) {
+      if (!parts) return new Date();
       const monthIndex = new Date(`${parts.month} 1, 2000`).getMonth();
       return new Date(Date.UTC(
         Number(parts.year),
@@ -923,6 +978,68 @@
         Number(parts.minute),
         Number(parts.second)
       ));
+    }
+
+    function getBrowserTimeZone() {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Paris";
+    }
+
+    function updateLocationDisplay() {
+      const label = COUNTRY ? `${CITY}, ${COUNTRY}` : CITY;
+      document.querySelector(".title").textContent = label;
+      document.title = `${CITY} — Clock & Weather`;
+    }
+
+    async function fetchCityFromCoords(lat, lon) {
+      const url =
+        `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}` +
+        `&count=1&language=en&format=json`;
+      try {
+        const data = await fetchWithRetry(url, 1);
+        const result = data?.results?.[0];
+        if (!result?.name) return null;
+        return {
+          city: result.name,
+          country: result.country_code || result.country || ""
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function initLocation() {
+      TZ = getBrowserTimeZone();
+
+      if (!navigator.geolocation) {
+        updateLocationDisplay();
+        return;
+      }
+
+      return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          LAT = pos.coords.latitude;
+          LON = pos.coords.longitude;
+
+          const cityData = await fetchCityFromCoords(LAT, LON);
+          if (cityData) {
+            CITY = cityData.city;
+            COUNTRY = cityData.country || "";
+          } else {
+            CITY = "Your location";
+            COUNTRY = "";
+          }
+
+          updateLocationDisplay();
+          resolve();
+        }, () => {
+          CITY = "Toulon";
+          COUNTRY = "France";
+          LAT = 43.1242;
+          LON = 5.9280;
+          updateLocationDisplay();
+          resolve();
+        }, { timeout: 8000 });
+      });
     }
 
     function fetchWithTimeout(url, timeout = 8000) {
@@ -962,6 +1079,8 @@
         $("statusDetails").textContent = lastTime
           ? `Last known update ${formatTimeHMFromString(lastTime)}.`
           : "Trying again soon.";
+      } else {
+        $("statusDetails").textContent = "";
       }
     }
 
@@ -1052,14 +1171,16 @@
 
       if ([95, 96, 99].includes(code)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 32h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 32z" />
-          <path d="M30 36l-6 12h8l-4 10 12-14h-8l4-8z" stroke="${night}" />
+          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
+          <path d="M28 42l-4 8" stroke="${rain}" />
+          <path d="M40 42l-4 8" stroke="${rain}" />
+          <path d="M30 34l-4 8" stroke="${sun}" />
+          <path d="M40 34l-4 8" stroke="${sun}" />
         </svg>`;
       }
 
-      return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="32" cy="32" r="10" />
-        <path d="M26 32h12" />
+      return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${night}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M38 12a16 16 0 1 0 12 28A14 14 0 0 1 38 12z" />
       </svg>`;
     }
 
@@ -1105,7 +1226,7 @@
         const num = document.createElement("div");
         num.className = "clock-number";
 
-        const radius = center - Math.max(32, size * 0.18);
+        const radius = center - Math.max(18, size * 0.1);
         const rad = (angle - 90) * (Math.PI / 180);
         const x = center + radius * Math.cos(rad);
         const y = center + radius * Math.sin(rad);
@@ -1136,7 +1257,7 @@
     }
 
     function updateClock() {
-      const parts = getParisParts();
+      const parts = getLocalParts();
 
       $("hh").textContent = parts.hour;
       $("mm").textContent = parts.minute;
@@ -1158,8 +1279,8 @@
       hands[1].style.transform = `rotate(${minDeg - 90}deg)`;
       hands[2].style.transform = `rotate(${secDeg - 90}deg)`;
 
-      const parisDate = getParisDateObject(parts);
-      $("moonPhase").textContent = moonPhaseName(parisDate);
+      const localDate = getLocalDateObject(parts);
+      $("moonPhase").textContent = moonPhaseName(localDate);
     }
 
     async function loadWeather() {
@@ -1176,7 +1297,7 @@
         renderWeather(data);
         setDataUnavailable(false);
 
-        const parts = getParisParts();
+        const parts = getLocalParts();
         $("lastUpdated").textContent = formatTimeHMFromParts(parts);
       } catch (e) {
         setDataUnavailable(true);
@@ -1242,6 +1363,7 @@
       renderSparkline(data);
       renderMiniForecast(data);
       renderTodaySummary(data);
+      renderSunProgress(data);
     }
 
     function renderSparkline(data) {
@@ -1370,6 +1492,58 @@
       $("summaryRain").textContent = probLabel;
     }
 
+    function formatDurationMinutes(minutes) {
+      if (!Number.isFinite(minutes)) return "—";
+      const total = Math.max(0, Math.round(minutes));
+      const hrs = Math.floor(total / 60);
+      const mins = total % 60;
+      if (hrs === 0) return `${mins}m`;
+      return `${hrs}h ${mins}m`;
+    }
+
+    function renderSunProgress(data) {
+      const sunrise = data.daily?.sunrise?.[0];
+      const sunset = data.daily?.sunset?.[0];
+      const currentTime = data.current?.time;
+      const fill = $("sunProgressFill");
+
+      if (!sunrise || !sunset || !currentTime) {
+        fill.style.width = "0%";
+        $("sunProgressLabel").textContent = "—";
+        $("sunProgressRange").textContent = "—";
+        return;
+      }
+
+      const sunriseDate = new Date(sunrise);
+      const sunsetDate = new Date(sunset);
+      const currentDate = new Date(currentTime);
+
+      if ([sunriseDate, sunsetDate, currentDate].some((d) => Number.isNaN(d.getTime()))) {
+        fill.style.width = "0%";
+        $("sunProgressLabel").textContent = "—";
+        $("sunProgressRange").textContent = "—";
+        return;
+      }
+
+      const total = sunsetDate - sunriseDate;
+      const elapsed = currentDate - sunriseDate;
+      const progress = total > 0 ? Math.min(Math.max(elapsed / total, 0), 1) : 0;
+      fill.style.width = `${Math.round(progress * 100)}%`;
+
+      const rangeLabel = `${formatTimeHMFromString(sunrise)} → ${formatTimeHMFromString(sunset)}`;
+      $("sunProgressRange").textContent = rangeLabel;
+
+      let labelText = "—";
+      if (currentDate < sunriseDate) {
+        labelText = `Time to sunset ${formatDurationMinutes((sunsetDate - currentDate) / 60000)}`;
+      } else if (currentDate <= sunsetDate) {
+        labelText = `Time to sunset ${formatDurationMinutes((sunsetDate - currentDate) / 60000)}`;
+      } else {
+        labelText = `Time since sunrise ${formatDurationMinutes((currentDate - sunriseDate) / 60000)}`;
+      }
+      $("sunProgressLabel").textContent = labelText;
+    }
+
     function updateAlerts(current) {
       const uvAlert = $("uvAlert");
       const gustAlert = $("gustAlert");
@@ -1446,16 +1620,18 @@
     }
 
     function init() {
-      document.querySelector(".title").textContent = `${CITY}, France`;
-
+      TZ = getBrowserTimeZone();
+      updateLocationDisplay();
       buildClockFace();
       updateClock();
       setInterval(updateClock, 1000);
 
-      loadWeather();
-      loadAirQuality();
-      setInterval(loadWeather, REFRESH_MS);
-      setInterval(loadAirQuality, REFRESH_MS);
+      initLocation().then(() => {
+        loadWeather();
+        loadAirQuality();
+        setInterval(loadWeather, REFRESH_MS);
+        setInterval(loadAirQuality, REFRESH_MS);
+      });
 
       $("refreshBtn").addEventListener("click", () => {
         loadWeather();
