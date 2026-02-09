@@ -66,6 +66,7 @@
       inset: 0;
       z-index: -1;
       opacity: 0.62;
+      pointer-events: none;
     }
 
     .container {
@@ -150,6 +151,13 @@
       align-items: start;
     }
 
+    .left-col,
+    .right-col {
+      display: grid;
+      gap: var(--card-gap);
+      align-content: start;
+    }
+
     .right-col {
       width: 100%;
       max-width: 560px;
@@ -172,8 +180,6 @@
       transform: translateY(-2px);
       box-shadow: 0 12px 34px rgba(0, 0, 0, 0.32);
     }
-
-    .left-col .card + .card { margin-top: var(--card-gap); }
 
     .clock-wrap {
       display: grid;
@@ -306,7 +312,7 @@
 
     .sun-moon-card {
       max-width: 100%;
-      padding: 14px 16px;
+      padding: 18px 20px;
     }
 
     .sun-moon-row {
@@ -475,20 +481,24 @@
       font-weight: 600;
       font-size: 1.05rem;
       color: var(--accent);
-      line-height: 1.05;
-      transform: translateY(-1px);
+      line-height: 1.1;
+      transform: translateY(0);
     }
 
     .sun-progress-card {
       display: grid;
-      gap: 10px;
-      padding: 14px 16px;
+      gap: 12px;
+      padding: 18px 20px;
+      align-content: start;
     }
 
     .sun-curve {
       width: 100%;
       height: 52px;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .sun-curve svg {
@@ -520,7 +530,7 @@
     .sun-progress-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4px 12px;
+      gap: 6px 12px;
       font-size: 0.78rem;
       color: var(--muted-strong);
     }
@@ -660,7 +670,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      opacity: 0.9;
+      opacity: 0.95;
       font-weight: 600;
       letter-spacing: 0.3px;
       color: var(--muted-strong);
@@ -670,6 +680,13 @@
       border: 1px solid rgba(255, 255, 255, 0.26);
       white-space: nowrap;
       box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.06);
+    }
+
+    .signature-name {
+      font-family: "Segoe Script", "Bradley Hand", "Snell Roundhand", "Lucida Handwriting", "Apple Chancery", cursive;
+      font-size: 1.02rem;
+      letter-spacing: 0.8px;
+      text-shadow: 0 1px 0 rgba(5, 10, 24, 0.35);
     }
 
     .signature-dot {
@@ -717,7 +734,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--card-gap);
-      margin-top: var(--card-gap);
+      margin-top: 0;
     }
 
     .card-content {
@@ -727,6 +744,7 @@
 
     .data-card {
       position: relative;
+      transition: opacity 150ms ease;
     }
 
     .data-card[data-loading="true"] .card-content {
@@ -813,6 +831,21 @@
       transform: translateX(-50%);
     }
 
+    .aqi-scale {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 4px;
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .aqi-scale span {
+      text-align: center;
+    }
+
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
       .grid { grid-template-columns: 1fr; }
@@ -888,6 +921,49 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="card sun-progress-card data-card" data-section="weather" data-loading="true">
+          <div class="skeleton">
+            <span class="skeleton-line w-60"></span>
+            <span class="skeleton-block"></span>
+            <span class="skeleton-line w-80"></span>
+          </div>
+          <div class="card-content">
+            <div class="weather-title">Sunshine</div>
+            <div class="sun-curve">
+              <svg viewBox="0 0 240 80" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="sunCurveGradient" x1="0" y1="0" x2="240" y2="0">
+                    <stop offset="0%" stop-color="#ffd36b"/>
+                    <stop offset="100%" stop-color="#7fe7ff"/>
+                  </linearGradient>
+                </defs>
+                <path d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-track"/>
+                <path id="sunCurveProgress" d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-progress"/>
+                <circle id="sunCurveDot" cx="10" cy="70" r="6" class="sun-curve-dot"/>
+              </svg>
+            </div>
+            <div class="sun-progress-list">
+              <div class="sun-progress-row"><span>First Light</span><span id="firstLight">—</span></div>
+              <div class="sun-progress-row"><span>Sunrise Today</span><span id="sunriseToday">—</span></div>
+              <div class="sun-progress-row"><span>Sunset Today</span><span id="sunsetToday">—</span></div>
+              <div class="sun-progress-row"><span>Last Light</span><span id="lastLight">—</span></div>
+              <div class="sun-progress-row"><span>Total Daylight</span><span id="totalDaylight">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card weather-card data-card" id="todaySummary" data-section="weather" data-loading="true">
+          <div class="skeleton">
+            <span class="skeleton-line w-50"></span>
+            <span class="skeleton-line w-70"></span>
+          </div>
+          <div class="card-content">
+            <div class="weather-title">Today summary</div>
+            <div class="weather-value" id="summaryTemp">—</div>
+            <div class="weather-subtitle">Max rain chance <span id="summaryRain">—</span></div>
           </div>
         </div>
 
@@ -1138,37 +1214,6 @@
         </div>
 
         <div class="bottom-grid">
-          <div class="card sun-progress-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-60"></span>
-              <span class="skeleton-block"></span>
-              <span class="skeleton-line w-80"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">Sunshine</div>
-              <div class="sun-curve">
-                <svg viewBox="0 0 240 80" fill="none" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="sunCurveGradient" x1="0" y1="0" x2="240" y2="0">
-                      <stop offset="0%" stop-color="#ffd36b"/>
-                      <stop offset="100%" stop-color="#7fe7ff"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-track"/>
-                  <path id="sunCurveProgress" d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-progress"/>
-                  <circle id="sunCurveDot" cx="10" cy="70" r="6" class="sun-curve-dot"/>
-                </svg>
-              </div>
-              <div class="sun-progress-list">
-                <div class="sun-progress-row"><span>First Light</span><span id="firstLight">—</span></div>
-                <div class="sun-progress-row"><span>Sunrise Today</span><span id="sunriseToday">—</span></div>
-                <div class="sun-progress-row"><span>Sunset Today</span><span id="sunsetToday">—</span></div>
-                <div class="sun-progress-row"><span>Last Light</span><span id="lastLight">—</span></div>
-                <div class="sun-progress-row"><span>Total Daylight</span><span id="totalDaylight">—</span></div>
-              </div>
-            </div>
-          </div>
-
           <div class="card weather-card data-card" data-section="air" data-loading="true">
             <div class="skeleton">
               <span class="skeleton-line w-60"></span>
@@ -1188,18 +1233,13 @@
               <div class="aqi-gauge" aria-hidden="true">
                 <span class="aqi-marker" id="aqiMarker" style="left: 0%;"></span>
               </div>
-            </div>
-          </div>
-
-          <div class="card weather-card data-card" id="todaySummary" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-50"></span>
-              <span class="skeleton-line w-70"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">Today summary</div>
-              <div class="weather-value" id="summaryTemp">—</div>
-              <div class="weather-subtitle">Max rain chance <span id="summaryRain">—</span></div>
+              <div class="aqi-scale" aria-hidden="true">
+                <span>Good</span>
+                <span>Fair</span>
+                <span>Moderate</span>
+                <span>Poor</span>
+                <span>Severe</span>
+              </div>
             </div>
           </div>
 
@@ -1227,7 +1267,7 @@
           </div>
         </div>
 
-        <div class="card" id="statusCard" style="margin-top: var(--card-gap); display:none;">
+        <div class="card" id="statusCard" style="display:none;">
           <div class="status-card">
             <div class="status-title">Weather temporarily unavailable</div>
             <div class="status-details" id="statusDetails"></div>
@@ -1237,7 +1277,10 @@
     </div>
 
     <div class="footer">
-      <div class="signature"><span class="signature-dot" aria-hidden="true"></span>B. Geeverding</div>
+      <div class="signature">
+        <span class="signature-dot" aria-hidden="true"></span>
+        <span class="signature-name">B. Geeverding</span>
+      </div>
       <button class="refresh-btn" id="refreshBtn">Refresh</button>
     </div>
   </div>
@@ -1250,6 +1293,8 @@
     let TZ = "Europe/Paris";
     const REFRESH_MS = 10 * 60 * 1000;
     const UNIT_KEY = "horloge:wind-unit";
+    const LOCATION_FETCH_KEY = "horloge:last-location-fetch";
+    const LOCATION_REQUEST_GAP = 2 * 60 * 1000;
 
     const state = {
       weather: null,
@@ -1294,6 +1339,14 @@
     function setSectionLoading(section, isLoading) {
       document.querySelectorAll(`.data-card[data-section="${section}"]`).forEach((card) => {
         card.dataset.loading = isLoading ? "true" : "false";
+      });
+    }
+
+    function triggerSectionFade(section) {
+      document.querySelectorAll(`.data-card[data-section="${section}"]`).forEach((card) => {
+        card.classList.remove("fade-update");
+        void card.offsetWidth;
+        card.classList.add("fade-update");
       });
     }
 
@@ -1453,6 +1506,23 @@
       }
     }
 
+    async function fetchLocationByIP() {
+      const url = "https://ipwho.is/";
+      try {
+        const data = await fetchWithRetry(url, 1);
+        if (!data || data.success === false) return null;
+        if (!Number.isFinite(data.latitude) || !Number.isFinite(data.longitude)) return null;
+        return {
+          lat: data.latitude,
+          lon: data.longitude,
+          city: data.city || "",
+          country: data.country || ""
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
     function getStoredLocation() {
       try {
         const raw = localStorage.getItem(LOCATION_KEY);
@@ -1473,6 +1543,24 @@
       }
     }
 
+    function shouldThrottleLocationFetch() {
+      try {
+        const last = Number(localStorage.getItem(LOCATION_FETCH_KEY));
+        if (!Number.isFinite(last)) return false;
+        return Date.now() - last < LOCATION_REQUEST_GAP;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function markLocationFetch() {
+      try {
+        localStorage.setItem(LOCATION_FETCH_KEY, String(Date.now()));
+      } catch (e) {
+        return;
+      }
+    }
+
     async function initLocation() {
       TZ = getBrowserTimeZone();
 
@@ -1485,50 +1573,94 @@
         updateLocationDisplay();
       }
 
-      if (!navigator.geolocation) {
-        if (!stored) updateLocationDisplay();
-        return;
-      }
-
       if (stored && Date.now() - stored.timestamp < LOCATION_MAX_AGE) {
         return;
       }
 
-      return new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(async (pos) => {
-          LAT = pos.coords.latitude;
-          LON = pos.coords.longitude;
+      if (shouldThrottleLocationFetch()) {
+        if (!stored) updateLocationDisplay();
+        return;
+      }
 
-          const cityData = await fetchCityFromCoords(LAT, LON);
-          if (cityData) {
-            CITY = cityData.city;
-            COUNTRY = cityData.country || "";
-          } else {
-            CITY = "Toulon";
-            COUNTRY = "France";
-          }
+      markLocationFetch();
 
-          setStoredLocation({
-            lat: LAT,
-            lon: LON,
-            city: CITY,
-            country: COUNTRY,
-            timestamp: Date.now()
-          });
+      if (navigator.geolocation) {
+        return new Promise((resolve) => {
+          navigator.geolocation.getCurrentPosition(async (pos) => {
+            LAT = pos.coords.latitude;
+            LON = pos.coords.longitude;
 
-          updateLocationDisplay();
-          resolve();
-        }, () => {
-          if (!stored) {
-            CITY = "Toulon";
-            COUNTRY = "France";
-            LAT = 43.1242;
-            LON = 5.9280;
+            const cityData = await fetchCityFromCoords(LAT, LON);
+            if (cityData) {
+              CITY = cityData.city;
+              COUNTRY = cityData.country || "";
+            } else {
+              CITY = "Toulon";
+              COUNTRY = "France";
+            }
+
+            setStoredLocation({
+              lat: LAT,
+              lon: LON,
+              city: CITY,
+              country: COUNTRY,
+              timestamp: Date.now()
+            });
+
             updateLocationDisplay();
-          }
-          resolve();
-        }, { timeout: 8000, maximumAge: LOCATION_MAX_AGE });
-      });
+            resolve();
+          }, async () => {
+            const ipData = await fetchLocationByIP();
+            if (ipData) {
+              LAT = ipData.lat;
+              LON = ipData.lon;
+              const cityData = await fetchCityFromCoords(LAT, LON);
+              CITY = cityData?.city || ipData.city || "Toulon";
+              COUNTRY = cityData?.country || ipData.country || "France";
+            } else {
+              CITY = "Toulon";
+              COUNTRY = "France";
+              LAT = 43.1242;
+              LON = 5.9280;
+            }
+
+            setStoredLocation({
+              lat: LAT,
+              lon: LON,
+              city: CITY,
+              country: COUNTRY,
+              timestamp: Date.now()
+            });
+
+            updateLocationDisplay();
+            resolve();
+          }, { timeout: 8000, maximumAge: LOCATION_MAX_AGE });
+        });
+      }
+
+      const ipData = await fetchLocationByIP();
+      if (ipData) {
+        LAT = ipData.lat;
+        LON = ipData.lon;
+        const cityData = await fetchCityFromCoords(LAT, LON);
+        CITY = cityData?.city || ipData.city || "Toulon";
+        COUNTRY = cityData?.country || ipData.country || "France";
+
+        setStoredLocation({
+          lat: LAT,
+          lon: LON,
+          city: CITY,
+          country: COUNTRY,
+          timestamp: Date.now()
+        });
+      } else if (!stored) {
+        CITY = "Toulon";
+        COUNTRY = "France";
+        LAT = 43.1242;
+        LON = 5.9280;
+      }
+
+      updateLocationDisplay();
     }
 
     function fetchWithTimeout(url, timeout = 8000) {
@@ -1787,6 +1919,7 @@
         renderWeather(data);
         setDataUnavailable(false);
         setSectionLoading("weather", false);
+        triggerSectionFade("weather");
 
         const parts = getLocalParts();
         setText("lastUpdated", formatTimeHMFromParts(parts));
@@ -1806,6 +1939,7 @@
         state.air = data;
         renderAirQuality(data);
         setSectionLoading("air", false);
+        triggerSectionFade("air");
       } catch (e) {
         if (!state.air) setText("airQuality", "—");
         setSectionLoading("air", false);
@@ -2163,11 +2297,11 @@
         "255,200,230",
         "255,180,200"
       ];
-      const stars = Array.from({ length: 160 }, () => ({
+      const stars = Array.from({ length: 260 }, () => ({
         x: Math.random(),
         y: Math.random(),
         r: Math.random() * 1.4 + 0.2,
-        alpha: Math.random() * 0.6 + 0.25,
+        alpha: Math.random() * 0.5 + 0.18,
         drift: (Math.random() - 0.5) * 0.00018,
         color: starColors[Math.floor(Math.random() * starColors.length)]
       }));
