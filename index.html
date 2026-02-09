@@ -48,21 +48,23 @@
       inset: 0;
       z-index: -2;
       background:
-        radial-gradient(900px 520px at 78% 8%, rgba(120, 140, 255, 0.22), transparent 78%),
-        radial-gradient(900px 480px at 12% 86%, rgba(255, 90, 200, 0.18), transparent 80%),
-        radial-gradient(620px 380px at 48% 38%, rgba(110, 230, 255, 0.16), transparent 82%),
-        radial-gradient(620px 360px at 22% 28%, rgba(210, 120, 255, 0.18), transparent 84%),
-        radial-gradient(560px 320px at 72% 70%, rgba(255, 80, 120, 0.16), transparent 86%),
-        radial-gradient(700px 420px at 62% 18%, rgba(214, 74, 255, 0.16), transparent 82%),
+        radial-gradient(1000px 560px at 78% 8%, rgba(120, 140, 255, 0.24), transparent 78%),
+        radial-gradient(920px 500px at 12% 86%, rgba(255, 90, 200, 0.2), transparent 82%),
+        radial-gradient(720px 420px at 48% 38%, rgba(110, 230, 255, 0.18), transparent 82%),
+        radial-gradient(680px 420px at 22% 28%, rgba(210, 120, 255, 0.2), transparent 84%),
+        radial-gradient(660px 360px at 72% 70%, rgba(255, 80, 120, 0.2), transparent 86%),
+        radial-gradient(820px 460px at 62% 18%, rgba(214, 74, 255, 0.18), transparent 82%),
+        radial-gradient(840px 520px at 35% 60%, rgba(255, 120, 120, 0.18), transparent 85%),
+        radial-gradient(780px 480px at 68% 46%, rgba(255, 60, 140, 0.16), transparent 85%),
         radial-gradient(1200px 800px at 50% 50%, rgba(10, 14, 30, 0.9), rgba(5, 7, 16, 0.98));
-      filter: saturate(1.2);
+      filter: saturate(1.25);
     }
 
     canvas#stars {
       position: fixed;
       inset: 0;
       z-index: -1;
-      opacity: 0.55;
+      opacity: 0.62;
     }
 
     .container {
@@ -260,16 +262,21 @@
       font-size: 1rem;
     }
 
+    .sun-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--card-gap);
+      align-items: stretch;
+    }
+
     .sun-moon {
       display: grid;
-      gap: 10px;
+      gap: 8px;
     }
 
     .sun-moon-card {
-      max-width: 320px;
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 100%;
+      padding: 14px 16px;
     }
 
     .sun-moon-row {
@@ -293,7 +300,7 @@
       justify-content: center;
       width: 22px;
       height: 22px;
-      margin-right: 4px;
+      margin-left: 6px;
       flex: 0 0 auto;
       color: var(--icon-night);
     }
@@ -337,10 +344,18 @@
     }
 
     .mini-time {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--muted-strong);
       font-weight: 600;
       white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+
+    .mini-time .ampm {
+      font-size: 0.62rem;
+      letter-spacing: 0.4px;
+      margin-left: 2px;
+      opacity: 0.9;
     }
 
     .mini-temp {
@@ -430,39 +445,64 @@
       font-weight: 600;
       font-size: 1.05rem;
       color: var(--accent);
+      line-height: 1.2;
     }
 
-    .sun-progress {
+    .sun-progress-card {
       display: grid;
       gap: 10px;
+      padding: 14px 16px;
     }
 
-    .sun-progress-bar {
+    .sun-curve {
+      width: 100%;
+      height: 84px;
       position: relative;
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      overflow: hidden;
     }
 
-    .sun-progress-fill {
-      position: absolute;
-      inset: 0;
-      width: 0%;
-      background: linear-gradient(90deg, rgba(255, 211, 107, 0.35), rgba(127, 231, 255, 0.6));
-      box-shadow: 0 0 12px rgba(127, 231, 255, 0.3);
-      border-radius: inherit;
-      transition: width 0.6s ease;
+    .sun-curve svg {
+      width: 100%;
+      height: 100%;
     }
 
-    .sun-progress-meta {
+    .sun-curve-track {
+      stroke: rgba(255, 255, 255, 0.2);
+    }
+
+    .sun-curve-progress {
+      stroke: url(#sunCurveGradient);
+      filter: drop-shadow(0 0 8px rgba(255, 211, 107, 0.3));
+    }
+
+    .sun-curve-track,
+    .sun-curve-progress {
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .sun-curve-dot {
+      fill: #ffd36b;
+      stroke: rgba(255, 255, 255, 0.85);
+      stroke-width: 2;
+    }
+
+    .sun-progress-list {
+      display: grid;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted-strong);
+    }
+
+    .sun-progress-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.85rem;
-      color: var(--muted-strong);
-      gap: 8px;
+      gap: 10px;
+    }
+
+    .sun-progress-row span:last-child {
+      color: var(--text);
+      font-weight: 600;
     }
 
     .metric-icon {
@@ -501,6 +541,63 @@
     }
 
     .badge.hidden { display: none; }
+
+    .uv-gauge {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 4px;
+      margin-top: 8px;
+      height: 10px;
+    }
+
+    .uv-segment {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .uv-segment.low { background: rgba(116, 211, 255, 0.6); }
+    .uv-segment.moderate { background: rgba(127, 231, 255, 0.55); }
+    .uv-segment.high { background: rgba(255, 211, 107, 0.6); }
+    .uv-segment.very-high { background: rgba(255, 143, 107, 0.65); }
+    .uv-segment.extreme { background: rgba(255, 90, 200, 0.65); }
+
+    .uv-indicator {
+      position: absolute;
+      top: -5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      transform: translateX(-50%);
+    }
+
+    .uv-label {
+      font-size: 0.8rem;
+      color: var(--muted-strong);
+      margin-top: 6px;
+    }
+
+    .loading-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted-strong);
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .loading-pill.visible {
+      opacity: 1;
+    }
 
     .wind-direction {
       display: inline-flex;
@@ -609,7 +706,7 @@
       .right-col { max-width: 100%; margin-left: 0; }
       .analog { width: 210px; height: 210px; }
       .mini-forecast-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .sun-moon-card { max-width: 100%; }
+      .sun-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -627,6 +724,7 @@
         </svg>
         Last updated at <span id="lastUpdated">—</span>
       </div>
+      <div class="loading-pill" id="loadingPill">Loading...</div>
     </div>
 
     <div class="layout">
@@ -642,27 +740,53 @@
           </div>
         </div>
 
-        <div class="card sun-moon sun-moon-card">
-          <div class="sun-moon-row">
-            <div>Sunrise</div>
-            <div id="sunrise">—</div>
-          </div>
-          <div class="sun-moon-row">
-            <div>Sunset</div>
-            <div id="sunset">—</div>
-          </div>
-          <div class="sun-moon-row">
-            <div class="sun-moon-label">
-              <span class="moon-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M16 4a8 8 0 1 0 4 14.2A7.2 7.2 0 0 1 16 4z"
-                        stroke="currentColor" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-              Moon phase
+        <div class="sun-row">
+          <div class="card sun-moon sun-moon-card">
+            <div class="sun-moon-row">
+              <div>Sunrise</div>
+              <div id="sunrise">—</div>
             </div>
-            <div id="moonPhase">—</div>
+            <div class="sun-moon-row">
+              <div>Sunset</div>
+              <div id="sunset">—</div>
+            </div>
+            <div class="sun-moon-row">
+              <div class="sun-moon-label">Moon phase</div>
+              <div class="sun-moon-label">
+                <span id="moonPhase">—</span>
+                <span class="moon-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M16 4a8 8 0 1 0 4 14.2A7.2 7.2 0 0 1 16 4z"
+                          stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card sun-progress-card">
+            <div class="weather-title">Sun progress</div>
+            <div class="sun-curve">
+              <svg viewBox="0 0 240 80" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="sunCurveGradient" x1="0" y1="0" x2="240" y2="0">
+                    <stop offset="0%" stop-color="#ffd36b"/>
+                    <stop offset="100%" stop-color="#7fe7ff"/>
+                  </linearGradient>
+                </defs>
+                <path d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-track"/>
+                <path id="sunCurveProgress" d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-progress"/>
+                <circle id="sunCurveDot" cx="10" cy="70" r="6" class="sun-curve-dot"/>
+              </svg>
+            </div>
+            <div class="sun-progress-list">
+              <div class="sun-progress-row"><span>First Light</span><span id="firstLight">—</span></div>
+              <div class="sun-progress-row"><span>Sunrise Today</span><span id="sunriseToday">—</span></div>
+              <div class="sun-progress-row"><span>Sunset Today</span><span id="sunsetToday">—</span></div>
+              <div class="sun-progress-row"><span>Last Light</span><span id="lastLight">—</span></div>
+              <div class="sun-progress-row"><span>Total Daylight</span><span id="totalDaylight">—</span></div>
+            </div>
           </div>
         </div>
 
@@ -677,18 +801,6 @@
           <div class="weather-subtitle">Max rain chance <span id="summaryRain">—</span></div>
         </div>
 
-        <div class="card weather-card">
-          <div class="weather-title">Sun progress</div>
-          <div class="sun-progress">
-            <div class="sun-progress-bar">
-              <div class="sun-progress-fill" id="sunProgressFill"></div>
-            </div>
-            <div class="sun-progress-meta">
-              <span id="sunProgressLabel">—</span>
-              <span id="sunProgressRange">—</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="right-col">
@@ -789,6 +901,15 @@
               UV index <span class="badge hidden" id="uvAlert">High</span>
             </div>
             <div class="weather-value" id="uv">—</div>
+            <div class="uv-gauge" aria-hidden="true">
+              <span class="uv-segment low"></span>
+              <span class="uv-segment moderate"></span>
+              <span class="uv-segment high"></span>
+              <span class="uv-segment very-high"></span>
+              <span class="uv-segment extreme"></span>
+              <span class="uv-indicator" id="uvIndicator"></span>
+            </div>
+            <div class="uv-label" id="uvLabel">—</div>
           </div>
 
           <div class="card weather-card">
@@ -909,10 +1030,18 @@
     };
 
     const $ = (id) => document.getElementById(id);
+    const LOCATION_KEY = "horloge:last-location";
+    const LOCATION_MAX_AGE = 6 * 60 * 60 * 1000;
 
     function formatValue(value, formatter, fallback = "—") {
       if (!Number.isFinite(value)) return fallback;
       return formatter(value);
+    }
+
+    function setLoading(show) {
+      const pill = $("loadingPill");
+      if (!pill) return;
+      pill.classList.toggle("visible", show);
     }
 
     function formatTimeHMFromParts(parts) {
@@ -938,11 +1067,22 @@
       return `${parts.hour} h ${parts.minute}`;
     }
 
-    function formatHourAmPm(hourValue) {
+    function formatTimeHMFromDate(date) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "—";
+      const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: TZ,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+      return formatter.format(date).replace(":", " h ");
+    }
+
+    function formatHourAmPmHtml(hourValue) {
       if (!Number.isFinite(hourValue)) return "—";
       const hour12 = hourValue % 12 || 12;
       const suffix = hourValue >= 12 ? "PM" : "AM";
-      return `${hour12}${suffix}`;
+      return `${hour12}<span class="ampm">${suffix}</span>`;
     }
 
     function getLocalParts(date = new Date()) {
@@ -1007,11 +1147,44 @@
       }
     }
 
+    function getStoredLocation() {
+      try {
+        const raw = localStorage.getItem(LOCATION_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!Number.isFinite(parsed?.lat) || !Number.isFinite(parsed?.lon)) return null;
+        return parsed;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setStoredLocation(payload) {
+      try {
+        localStorage.setItem(LOCATION_KEY, JSON.stringify(payload));
+      } catch (e) {
+        return;
+      }
+    }
+
     async function initLocation() {
       TZ = getBrowserTimeZone();
 
-      if (!navigator.geolocation) {
+      const stored = getStoredLocation();
+      if (stored) {
+        LAT = stored.lat;
+        LON = stored.lon;
+        CITY = stored.city || "Near you";
+        COUNTRY = stored.country || "";
         updateLocationDisplay();
+      }
+
+      if (!navigator.geolocation) {
+        if (!stored) updateLocationDisplay();
+        return;
+      }
+
+      if (stored && Date.now() - stored.timestamp < LOCATION_MAX_AGE) {
         return;
       }
 
@@ -1025,20 +1198,30 @@
             CITY = cityData.city;
             COUNTRY = cityData.country || "";
           } else {
-            CITY = "Your location";
+            CITY = "Near you";
             COUNTRY = "";
           }
+
+          setStoredLocation({
+            lat: LAT,
+            lon: LON,
+            city: CITY,
+            country: COUNTRY,
+            timestamp: Date.now()
+          });
 
           updateLocationDisplay();
           resolve();
         }, () => {
-          CITY = "Toulon";
-          COUNTRY = "France";
-          LAT = 43.1242;
-          LON = 5.9280;
-          updateLocationDisplay();
+          if (!stored) {
+            CITY = "Toulon";
+            COUNTRY = "France";
+            LAT = 43.1242;
+            LON = 5.9280;
+            updateLocationDisplay();
+          }
           resolve();
-        }, { timeout: 8000 });
+        }, { timeout: 8000, maximumAge: LOCATION_MAX_AGE });
       });
     }
 
@@ -1226,7 +1409,7 @@
         const num = document.createElement("div");
         num.className = "clock-number";
 
-        const radius = center - Math.max(18, size * 0.1);
+        const radius = center - Math.max(26, size * 0.16);
         const rad = (angle - 90) * (Math.PI / 180);
         const x = center + radius * Math.cos(rad);
         const y = center + radius * Math.sin(rad);
@@ -1292,6 +1475,7 @@
         `&timezone=${encodeURIComponent(TZ)}`;
 
       try {
+        setLoading(true);
         const data = await fetchWithRetry(url, 1);
         state.weather = data;
         renderWeather(data);
@@ -1301,6 +1485,8 @@
         $("lastUpdated").textContent = formatTimeHMFromParts(parts);
       } catch (e) {
         setDataUnavailable(true);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -1364,6 +1550,7 @@
       renderMiniForecast(data);
       renderTodaySummary(data);
       renderSunProgress(data);
+      updateUvGauge(c.uv_index);
     }
 
     function renderSparkline(data) {
@@ -1407,10 +1594,14 @@
 
       if (!times.length) return;
 
-      const startIndex = times.findIndex((t) => t === currentTime);
-      const index = startIndex >= 0 ? startIndex : 0;
-
-      const sliceTimes = times.slice(index + 1, index + 6);
+      const nowDate = currentTime ? new Date(currentTime) : new Date();
+      const nextIndices = [];
+      for (let i = 0; i < times.length; i++) {
+        const timeDate = new Date(times[i]);
+        if (Number.isNaN(timeDate.getTime())) continue;
+        if (timeDate > nowDate) nextIndices.push(i);
+        if (nextIndices.length === 5) break;
+      }
 
       const nowItem = document.createElement("div");
       nowItem.className = "mini-item";
@@ -1427,14 +1618,15 @@
       `;
       container.appendChild(nowItem);
 
-      sliceTimes.forEach((time, i) => {
+      nextIndices.forEach((idx) => {
+        const time = times[idx];
         const timeParts = splitLocalTime(time);
         const hourValue = timeParts ? Number(timeParts.hour) : NaN;
-        const label = formatHourAmPm(hourValue);
+        const label = formatHourAmPmHtml(hourValue);
 
-        const temp = temps[index + 1 + i];
-        const prob = probs[index + 1 + i];
-        const code = codes[index + 1 + i];
+        const temp = temps[idx];
+        const prob = probs[idx];
+        const code = codes[idx];
         const tempLabel = Number.isFinite(temp) ? `${Math.round(temp)}°` : "—";
         const probLabel = Number.isFinite(prob) ? `${Math.round(prob)}%` : "—";
 
@@ -1505,12 +1697,28 @@
       const sunrise = data.daily?.sunrise?.[0];
       const sunset = data.daily?.sunset?.[0];
       const currentTime = data.current?.time;
-      const fill = $("sunProgressFill");
+
+      const firstLightEl = $("firstLight");
+      const sunriseEl = $("sunriseToday");
+      const sunsetEl = $("sunsetToday");
+      const lastLightEl = $("lastLight");
+      const daylightEl = $("totalDaylight");
+      const curve = $("sunCurveProgress");
+      const dot = $("sunCurveDot");
 
       if (!sunrise || !sunset || !currentTime) {
-        fill.style.width = "0%";
-        $("sunProgressLabel").textContent = "—";
-        $("sunProgressRange").textContent = "—";
+        [firstLightEl, sunriseEl, sunsetEl, lastLightEl, daylightEl].forEach((el) => {
+          if (el) el.textContent = "—";
+        });
+        if (curve) {
+          const length = curve.getTotalLength();
+          curve.style.strokeDasharray = length;
+          curve.style.strokeDashoffset = length;
+        }
+        if (dot) {
+          dot.setAttribute("cx", "10");
+          dot.setAttribute("cy", "70");
+        }
         return;
       }
 
@@ -1519,29 +1727,67 @@
       const currentDate = new Date(currentTime);
 
       if ([sunriseDate, sunsetDate, currentDate].some((d) => Number.isNaN(d.getTime()))) {
-        fill.style.width = "0%";
-        $("sunProgressLabel").textContent = "—";
-        $("sunProgressRange").textContent = "—";
+        [firstLightEl, sunriseEl, sunsetEl, lastLightEl, daylightEl].forEach((el) => {
+          if (el) el.textContent = "—";
+        });
         return;
       }
+
+      const firstLightDate = new Date(sunriseDate.getTime() - 30 * 60000);
+      const lastLightDate = new Date(sunsetDate.getTime() + 30 * 60000);
+      const totalMinutes = (sunsetDate - sunriseDate) / 60000;
+
+      firstLightEl.textContent = formatTimeHMFromDate(firstLightDate);
+      sunriseEl.textContent = formatTimeHMFromDate(sunriseDate);
+      sunsetEl.textContent = formatTimeHMFromDate(sunsetDate);
+      lastLightEl.textContent = formatTimeHMFromDate(lastLightDate);
+      daylightEl.textContent = formatDurationMinutes(totalMinutes);
 
       const total = sunsetDate - sunriseDate;
       const elapsed = currentDate - sunriseDate;
       const progress = total > 0 ? Math.min(Math.max(elapsed / total, 0), 1) : 0;
-      fill.style.width = `${Math.round(progress * 100)}%`;
 
-      const rangeLabel = `${formatTimeHMFromString(sunrise)} → ${formatTimeHMFromString(sunset)}`;
-      $("sunProgressRange").textContent = rangeLabel;
-
-      let labelText = "—";
-      if (currentDate < sunriseDate) {
-        labelText = `Time to sunset ${formatDurationMinutes((sunsetDate - currentDate) / 60000)}`;
-      } else if (currentDate <= sunsetDate) {
-        labelText = `Time to sunset ${formatDurationMinutes((sunsetDate - currentDate) / 60000)}`;
-      } else {
-        labelText = `Time since sunrise ${formatDurationMinutes((currentDate - sunriseDate) / 60000)}`;
+      if (curve) {
+        const length = curve.getTotalLength();
+        curve.style.strokeDasharray = length;
+        curve.style.strokeDashoffset = length - length * progress;
       }
-      $("sunProgressLabel").textContent = labelText;
+
+      if (dot) {
+        const startX = 10;
+        const endX = 230;
+        const baseY = 70;
+        const peakY = 12;
+        const x = startX + (endX - startX) * progress;
+        const y = baseY - Math.sin(progress * Math.PI) * (baseY - peakY);
+        dot.setAttribute("cx", x.toFixed(1));
+        dot.setAttribute("cy", y.toFixed(1));
+      }
+    }
+
+    function updateUvGauge(value) {
+      const indicator = $("uvIndicator");
+      const label = $("uvLabel");
+      if (!indicator || !label) return;
+
+      if (!Number.isFinite(value)) {
+        indicator.style.display = "none";
+        label.textContent = "—";
+        return;
+      }
+
+      indicator.style.display = "block";
+      const capped = Math.max(0, Math.min(11, value));
+      const percent = (capped / 11) * 100;
+      indicator.style.left = `${percent}%`;
+
+      let level = "Low";
+      if (value >= 11) level = "Extreme";
+      else if (value >= 8) level = "Very High";
+      else if (value >= 6) level = "High";
+      else if (value >= 3) level = "Moderate";
+
+      label.textContent = `${level} exposure`;
     }
 
     function updateAlerts(current) {
@@ -1585,12 +1831,19 @@
       const ctx = canvas.getContext("2d");
 
       let w, h;
-      const stars = Array.from({ length: 80 }, () => ({
+      const starColors = [
+        "255,255,255",
+        "180,210,255",
+        "255,200,230",
+        "255,180,200"
+      ];
+      const stars = Array.from({ length: 160 }, () => ({
         x: Math.random(),
         y: Math.random(),
-        r: Math.random() * 1.2 + 0.2,
-        alpha: Math.random() * 0.6 + 0.2,
-        drift: (Math.random() - 0.5) * 0.00015
+        r: Math.random() * 1.4 + 0.2,
+        alpha: Math.random() * 0.6 + 0.25,
+        drift: (Math.random() - 0.5) * 0.00018,
+        color: starColors[Math.floor(Math.random() * starColors.length)]
       }));
 
       function resize() {
@@ -1609,7 +1862,7 @@
           if (s.y > 1) s.y = 0;
 
           ctx.beginPath();
-          ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+          ctx.fillStyle = `rgba(${s.color},${s.alpha})`;
           ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
           ctx.fill();
         }
