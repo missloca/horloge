@@ -273,7 +273,7 @@
     }
 
     .clock-number.six {
-      transform: translate(-50%, -50%) translateX(-4px);
+      transform: translate(-50%, -50%) translateX(-7px);
     }
 
     .digital { text-align: center; }
@@ -433,6 +433,77 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--card-gap);
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--card-gap);
+      align-items: stretch;
+    }
+
+    .bottom-grid .card {
+      height: 100%;
+    }
+
+    .summary-chart {
+      margin-top: 14px;
+      padding: 12px 12px 10px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.05);
+    }
+
+    .summary-chart-svg {
+      width: 100%;
+      height: 90px;
+      display: block;
+    }
+
+    .summary-grid line {
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 1;
+    }
+
+    .summary-curve {
+      fill: none;
+      stroke: #7fe7ff;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 10px rgba(127, 231, 255, 0.35));
+    }
+
+    .summary-curve-glow {
+      stroke: rgba(180, 140, 255, 0.4);
+      stroke-width: 6;
+      filter: blur(6px);
+      opacity: 0.4;
+    }
+
+    .summary-scale {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      justify-items: center;
+    }
+
+    .summary-scale span {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .summary-scale small {
+      font-size: 0.5rem;
+      letter-spacing: 0.6px;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .weather-card {
@@ -1007,6 +1078,17 @@
       .bottom-grid { grid-template-columns: 1fr; }
       .header { flex-wrap: wrap; }
     }
+
+    @media (max-width: 560px) {
+      .summary-scale {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        row-gap: 6px;
+      }
+
+      .summary-scale span.compact-hide {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1051,6 +1133,34 @@
             <div class="weather-title">Today summary</div>
             <div class="weather-value" id="summaryTemp">—</div>
             <div class="weather-subtitle">Dew point <span id="dewPoint">—</span></div>
+            <div class="summary-chart" aria-hidden="true">
+              <svg class="summary-chart-svg" viewBox="0 0 320 90" role="img">
+                <g class="summary-grid">
+                  <line x1="0" y1="12" x2="320" y2="12"></line>
+                  <line x1="0" y1="44" x2="320" y2="44"></line>
+                  <line x1="0" y1="76" x2="320" y2="76"></line>
+                  <line x1="40" y1="0" x2="40" y2="90"></line>
+                  <line x1="80" y1="0" x2="80" y2="90"></line>
+                  <line x1="120" y1="0" x2="120" y2="90"></line>
+                  <line x1="160" y1="0" x2="160" y2="90"></line>
+                  <line x1="200" y1="0" x2="200" y2="90"></line>
+                  <line x1="240" y1="0" x2="240" y2="90"></line>
+                  <line x1="280" y1="0" x2="280" y2="90"></line>
+                </g>
+                <path id="summaryCurveGlow" class="summary-curve summary-curve-glow" d=""></path>
+                <path id="summaryCurve" class="summary-curve" d=""></path>
+              </svg>
+              <div class="summary-scale">
+                <span>3</span>
+                <span class="compact-hide">6</span>
+                <span class="compact-hide">9</span>
+                <span>12<small>AM</small></span>
+                <span>3</span>
+                <span class="compact-hide">6</span>
+                <span class="compact-hide">9</span>
+                <span>12<small>PM</small></span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1119,18 +1229,32 @@
               <div class="moon-visual">
                 <div class="moon-icon-large" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M16 4.5A8 8 0 1 0 20.5 17a7 7 0 0 1-4.5-12.5z"
+                    <path d="M15.5 3.5A8.5 8.5 0 1 0 21 17a7.5 7.5 0 0 1-5.5-13.5z"
                           stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </div>
-                <div class="moon-phase-label" id="moonPhaseLabel">—</div>
+                <div>
+                  <div class="moon-phase-label" id="moonPhaseLabel">—</div>
+                  <div class="weather-subtitle">Illumination <span id="moonIllumination">—</span></div>
+                </div>
               </div>
               <div class="moon-grid">
-                <div class="moon-item"><span>Illumination</span><span id="moonIllumination">—</span></div>
-                <div class="moon-item"><span>Moonrise</span><span id="moonrise">—</span></div>
-                <div class="moon-item"><span>Moonset</span><span id="moonset">—</span></div>
-                <div class="moon-item"><span>Next full moon</span><span id="nextFullMoon">—</span></div>
-                <div class="moon-item"><span>Distance</span><span id="moonDistance">—</span></div>
+                <div class="moon-item">
+                  <span>Moonrise</span>
+                  <span id="moonrise">—</span>
+                </div>
+                <div class="moon-item">
+                  <span>Moonset</span>
+                  <span id="moonset">—</span>
+                </div>
+                <div class="moon-item">
+                  <span>Distance</span>
+                  <span id="moonDistance">—</span>
+                </div>
+                <div class="moon-item">
+                  <span>Next full</span>
+                  <span id="nextFullMoon">—</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1138,60 +1262,81 @@
 
         <div class="card mini-forecast data-card" data-section="weather" data-loading="true">
           <div class="skeleton">
-            <span class="skeleton-line w-40"></span>
+            <span class="skeleton-line w-80"></span>
             <span class="skeleton-block"></span>
           </div>
           <div class="card-content">
-            <div class="weather-title">Next 6 hours</div>
+            <div class="weather-title">
+              <span class="metric-icon cloud" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M6 12h10a4 4 0 0 0 0-8 6 6 0 0 0-11.2 1.8A3.5 3.5 0 0 0 6 12z"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4 15h12a3 3 0 1 1-2.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </span>
+              Next hours
+            </div>
             <div class="mini-forecast-row" id="miniForecast"></div>
           </div>
         </div>
 
-      </div>
-
-      <div class="right-col">
         <div class="grid">
           <div class="card weather-card data-card" data-section="weather" data-loading="true">
             <div class="skeleton">
-              <span class="skeleton-line w-40"></span>
-              <span class="skeleton-block"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">
-                <span class="metric-icon location" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 21s6-6.5 6-11a6 6 0 1 0-12 0c0 4.5 6 11 6 11z"
-                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/>
-                  </svg>
-                </span>
-                Conditions
-              </div>
-              <div class="condition-row">
-                <div id="conditionIcon" class="condition-icon"></div>
-                <div class="condition-text" id="conditionText">—</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card weather-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-50"></span>
+              <span class="skeleton-line w-60"></span>
               <span class="skeleton-line w-70"></span>
             </div>
             <div class="card-content">
               <div class="weather-title">
                 <span class="metric-icon sun" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3v11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    <circle cx="12" cy="17" r="4" stroke="currentColor" stroke-width="1.6"/>
-                    <path d="M12 14v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2 2M17.5 17.5l2 2M4.5 19.5l2-2M17.5 6.5l2-2"
+                          stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
                   </svg>
                 </span>
-                Temperature
+                UV index <span class="badge hidden" id="uvAlert">High</span>
               </div>
-              <div class="weather-value" id="temp">—</div>
-              <div class="weather-subtitle">Feels like <span id="feels">—</span></div>
+              <div class="weather-value" id="uv">—</div>
+              <div class="uv-gauge">
+                <span class="uv-segment low"></span>
+                <span class="uv-segment moderate"></span>
+                <span class="uv-segment high"></span>
+                <span class="uv-segment very-high"></span>
+                <span class="uv-segment extreme"></span>
+                <span class="uv-indicator" id="uvIndicator" style="left: 0%;"></span>
+              </div>
+              <div class="uv-label" id="uvLabel">—</div>
+            </div>
+          </div>
+
+          <div class="card weather-card data-card" data-section="weather" data-loading="true">
+            <div class="skeleton">
+              <span class="skeleton-line w-60"></span>
+              <span class="skeleton-line w-70"></span>
+            </div>
+            <div class="card-content">
+              <div class="weather-title">
+                <span class="metric-icon wind" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M4 11h12a3 3 0 1 0-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M4 15h10a2.5 2.5 0 1 1-2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                Wind
+              </div>
+              <div class="weather-value" id="wind">—</div>
+              <div class="weather-subtitle">Gusts <span id="gusts">—</span> <span class="badge hidden" id="gustAlert">Gusty</span></div>
+              <div class="wind-direction">
+                <span class="wind-arrow" id="windArrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3l4 6-4-1-4 1 4-6z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                    <path d="M12 8v12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <span id="windDir">—</span>
+              </div>
             </div>
           </div>
 
@@ -1204,126 +1349,40 @@
               <div class="weather-title">
                 <span class="metric-icon humidity" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3s5 6 5 9a5 5 0 1 1-10 0c0-3 5-9 5-9z"
-                          stroke="currentColor" stroke-width="1.8"
-                          stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 3c4 5 6 8 6 11a6 6 0 1 1-12 0c0-3 2-6 6-11z"
+                          stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
                   </svg>
                 </span>
                 Humidity
               </div>
               <div class="weather-value" id="humidity">—</div>
-            </div>
-          </div>
-
-          <div class="card weather-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-50"></span>
-              <span class="skeleton-line w-70"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">
-                <span class="metric-icon pressure" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M12 12l3-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                  </svg>
-                </span>
-                Pressure
-              </div>
-              <div class="weather-value" id="pressure">—</div>
+              <div class="weather-subtitle">Dew point <span id="dewPoint">—</span></div>
             </div>
           </div>
 
           <div class="card weather-card data-card" data-section="weather" data-loading="true">
             <div class="skeleton">
               <span class="skeleton-line w-60"></span>
-              <span class="skeleton-line w-80"></span>
               <span class="skeleton-line w-70"></span>
             </div>
             <div class="card-content">
               <div class="weather-title">
-                <span class="metric-icon wind" aria-hidden="true">
+                <span class="metric-icon pressure" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M4 9h10a3 3 0 1 0-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    <path d="M4 14h12a2.5 2.5 0 1 1-2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M12 12l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                   </svg>
                 </span>
-                Wind
+                Pressure
               </div>
-              <div class="weather-value" id="wind">—</div>
-              <div class="weather-subtitle">
-                Gusts <span id="gusts">—</span> <span class="badge hidden" id="gustAlert">High</span>
-              </div>
-              <div class="wind-direction">
-                <span class="wind-arrow" id="windArrow" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 4l4 6h-8l4-6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                    <path d="M12 10v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                  </svg>
-                </span>
-                <span id="windDir">—</span>
-              </div>
-              <div class="wind-compass" aria-hidden="true">
-                <span class="wind-compass-label n">N</span>
-                <span class="wind-compass-label e">E</span>
-                <span class="wind-compass-label s">S</span>
-                <span class="wind-compass-label w">W</span>
-                <div class="wind-compass-needle" id="windCompassNeedle"></div>
-              </div>
+              <div class="weather-value" id="pressure">—</div>
+              <div class="weather-subtitle">Visibility <span id="visibility">—</span></div>
             </div>
           </div>
 
           <div class="card weather-card data-card" data-section="weather" data-loading="true">
             <div class="skeleton">
-              <span class="skeleton-line w-50"></span>
-              <span class="skeleton-line w-80"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">
-                <span class="metric-icon uv" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                  </svg>
-                </span>
-                UV index <span class="badge hidden" id="uvAlert">High</span>
-              </div>
-              <div class="weather-value" id="uv">—</div>
-              <div class="uv-gauge" aria-hidden="true">
-                <span class="uv-segment low"></span>
-                <span class="uv-segment moderate"></span>
-                <span class="uv-segment high"></span>
-                <span class="uv-segment very-high"></span>
-                <span class="uv-segment extreme"></span>
-                <span class="uv-indicator" id="uvIndicator"></span>
-              </div>
-              <div class="uv-label" id="uvLabel">—</div>
-            </div>
-          </div>
-
-          <div class="card weather-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-50"></span>
-              <span class="skeleton-line w-70"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">
-                <span class="metric-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6-10-6-10-6z"
-                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
-                  </svg>
-                </span>
-                Visibility
-              </div>
-              <div class="weather-value" id="visibility">—</div>
-            </div>
-          </div>
-
-          <div class="card weather-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-50"></span>
+              <span class="skeleton-line w-60"></span>
               <span class="skeleton-line w-70"></span>
             </div>
             <div class="card-content">
@@ -1507,518 +1566,371 @@
       triggerFade(el);
     }
 
-    function setSectionLoading(section, isLoading) {
-      document.querySelectorAll(`.data-card[data-section="${section}"]`).forEach((card) => {
-        card.dataset.loading = isLoading ? "true" : "false";
-      });
-    }
-
-    function triggerSectionFade(section) {
-      document.querySelectorAll(`.data-card[data-section="${section}"]`).forEach((card) => {
-        card.classList.remove("fade-update");
-        void card.offsetWidth;
-        card.classList.add("fade-update");
-      });
-    }
-
-    function formatWindSpeed(value) {
-      if (!Number.isFinite(value)) return "—";
-      if (state.units.wind === "ms") {
-        const ms = value / 3.6;
-        return `${Math.round(ms)} m/s`;
-      }
-      return `${Math.round(value)} km/h`;
+    function formatWindSpeed(speed) {
+      if (!Number.isFinite(speed)) return "—";
+      if (state.units.wind === "ms") return `${(speed / 3.6).toFixed(1)} m/s`;
+      return `${Math.round(speed)} km/h`;
     }
 
     function formatRainRate(value) {
       if (!Number.isFinite(value)) return "—";
       if (value <= 0) return "0 mm/h";
-      if (value < 1) return `${value.toFixed(1)} mm/h`;
-      if (value < 10) return `${value.toFixed(1)} mm/h`;
-      return `${Math.round(value)} mm/h`;
+      if (value < 0.3) return "<0.3 mm/h";
+      return `${value.toFixed(1)} mm/h`;
     }
 
-    function applyWindUnit(unit) {
-      state.units.wind = unit;
-      try {
-        localStorage.setItem(UNIT_KEY, unit);
-      } catch (e) {
-        return;
-      }
-    }
-
-    function updateUnitToggle() {
-      document.querySelectorAll(".unit-toggle button").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.unit === state.units.wind);
-      });
-    }
-
-    function initUnitToggle() {
-      try {
-        const stored = localStorage.getItem(UNIT_KEY);
-        if (stored === "kmh" || stored === "ms") state.units.wind = stored;
-      } catch (e) {
-        return;
-      }
-
-      updateUnitToggle();
-      document.querySelectorAll(".unit-toggle button").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          applyWindUnit(btn.dataset.unit);
-          updateUnitToggle();
-          if (state.weather) renderWeather(state.weather);
-        });
-      });
-    }
-
-    function formatHourMinute(hour, minute) {
-      if (hour == null || minute == null) return "—";
-      const safeHour = String(Number(hour));
-      const safeMinute = String(minute).padStart(2, "0");
-      return `${safeHour}h${safeMinute}`;
-    }
-
-    function formatTimeHMFromParts(parts) {
-      if (!parts?.hour || !parts?.minute) return "—";
-      return formatHourMinute(parts.hour, parts.minute);
-    }
-
-    function formatDateLongFromParts(parts) {
-      return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
-    }
-
-    function getTimePartsFromDate(date) {
-      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: TZ,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-      const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-      return { hour: parts.hour, minute: parts.minute };
-    }
-
-    function splitLocalTime(timeValue) {
-      if (!timeValue) return null;
-      if (timeValue instanceof Date) return getTimePartsFromDate(timeValue);
-      const [, timePart] = timeValue.split("T");
-      if (!timePart) return null;
-      const [hour, minute] = timePart.split(":");
-      return { hour, minute };
-    }
-
-    function formatTimeHMFromString(timeString) {
-      const parts = splitLocalTime(timeString);
-      if (!parts) return "—";
-      return formatHourMinute(parts.hour, parts.minute);
+    function formatHourAmPmHtml(hour) {
+      if (!Number.isFinite(hour)) return "—";
+      const period = hour >= 12 ? "PM" : "AM";
+      const value = hour % 12 === 0 ? 12 : hour % 12;
+      return `${value}<span class="ampm">${period}</span>`;
     }
 
     function formatTimeHMFromDate(date) {
-      const parts = getTimePartsFromDate(date);
-      if (!parts) return "—";
-      return formatHourMinute(parts.hour, parts.minute);
+      if (!(date instanceof Date)) return "—";
+      return new Intl.DateTimeFormat("fr-FR", {
+        timeZone: TZ,
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(date);
     }
 
-    function getZonedDate(date, timeZone) {
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-      });
-      const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-      return new Date(Date.UTC(
-        Number(parts.year),
-        Number(parts.month) - 1,
-        Number(parts.day),
-        12,
-        0,
-        0
-      ));
+    function formatDateLong(date) {
+      if (!(date instanceof Date)) return "—";
+      return new Intl.DateTimeFormat("fr-FR", {
+        timeZone: TZ,
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      }).format(date);
     }
 
-    function formatHourAmPmHtml(hourValue) {
-      if (!Number.isFinite(hourValue)) return "—";
-      const hour12 = hourValue % 12 || 12;
-      const suffix = hourValue >= 12 ? "PM" : "AM";
-      return `${hour12}<span class="ampm">${suffix}</span>`;
-    }
-
-    function getLocalParts(date = new Date()) {
-      const formatter = new Intl.DateTimeFormat("en-GB", {
+    function splitLocalTime(date) {
+      if (!(date instanceof Date)) return null;
+      const parts = new Intl.DateTimeFormat("en-GB", {
         timeZone: TZ,
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
-        fractionalSecondDigits: 3,
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
         hour12: false
-      });
-
-      const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-
-      return parts;
+      }).formatToParts(date);
+      const hour = parts.find((p) => p.type === "hour")?.value;
+      const minute = parts.find((p) => p.type === "minute")?.value;
+      return { hour, minute };
     }
 
-    function getLocalDateObject(parts) {
-      if (!parts) return new Date();
-      const monthIndex = new Date(`${parts.month} 1, 2000`).getMonth();
-      return new Date(Date.UTC(
-        Number(parts.year),
-        monthIndex,
-        Number(parts.day),
-        Number(parts.hour),
-        Number(parts.minute),
-        Number(parts.second)
-      ));
-    }
+    function getZonedDate(date, tz) {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: tz,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(date);
 
-    function updateLocationDisplay() {
-      const isFallback = !CITY || CITY === "Near you";
-      const safeCity = isFallback ? "Toulon" : CITY;
-      const safeCountry = isFallback ? "France" : (COUNTRY || "");
-      const label = safeCountry ? `${safeCity}, ${safeCountry}` : safeCity;
-      document.querySelector(".title").textContent = label;
-      document.title = `${safeCity} — Clock & Weather`;
-    }
-    function initLocation() {
-      TZ = "Europe/Paris";
-      CITY = "Toulon";
-      COUNTRY = "France";
-      LAT = 43.12442;
-      LON = 5.92836;
-      updateLocationDisplay();
+      const values = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+      return new Date(`${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}:${values.second}`);
     }
 
     function weatherLabel(code) {
-      const map = {
+      const mapping = {
         0: "Clear",
-        1: "Mainly clear",
+        1: "Mostly clear",
         2: "Partly cloudy",
         3: "Overcast",
         45: "Fog",
         48: "Depositing rime fog",
         51: "Light drizzle",
-        53: "Drizzle",
+        53: "Moderate drizzle",
         55: "Dense drizzle",
-        61: "Light rain",
-        63: "Rain",
+        56: "Light freezing drizzle",
+        57: "Dense freezing drizzle",
+        61: "Slight rain",
+        63: "Moderate rain",
         65: "Heavy rain",
-        66: "Freezing rain",
+        66: "Light freezing rain",
         67: "Heavy freezing rain",
-        71: "Snow fall",
-        73: "Snow fall",
+        71: "Slight snow",
+        73: "Moderate snow",
         75: "Heavy snow",
         77: "Snow grains",
-        80: "Light rain showers",
-        81: "Rain showers",
-        82: "Heavy rain showers",
-        85: "Snow showers",
+        80: "Slight rain showers",
+        81: "Moderate rain showers",
+        82: "Violent rain showers",
+        85: "Slight snow showers",
         86: "Heavy snow showers",
         95: "Thunderstorm",
-        96: "Thunderstorm with hail",
-        99: "Thunderstorm with heavy hail"
+        96: "Thunderstorm w/ hail",
+        99: "Thunderstorm w/ heavy hail"
       };
-      return map[code] || "Unknown";
+      return mapping[code] || "—";
     }
 
     function weatherIcon(code) {
-      const stroke = "#d8dee9";
-      const strokeSoft = "#c7cfdd";
-      const sun = "#ffd36b";
-      const rain = "#7bdcff";
-      const night = "#bda8ff";
-
-      if ([0, 1].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="32" cy="32" r="10" stroke="${sun}" />
-          <path d="M32 6v8M32 50v8M6 32h8M50 32h8M14 14l6 6M44 44l6 6M14 50l6-6M44 20l6-6" stroke="${sun}" />
-        </svg>`;
+      switch (code) {
+        case 0:
+        case 1:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="12" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-sun')}" stroke-width="3"/>
+              <path d="M32 6v8M32 50v8M6 32h8M50 32h8M12 12l6 6M46 46l6 6M12 52l6-6M46 18l6-6"
+                    stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-sun')}" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          `;
+        case 2:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="26" cy="26" r="10" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-sun')}" stroke-width="3"/>
+              <path d="M18 40h28a8 8 0 1 0-7.5-11A11 11 0 0 0 18 40z"
+                    stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+        case 3:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M18 42h26a9 9 0 1 0-8.4-12.5A13 13 0 0 0 18 42z"
+                    stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+        case 45:
+        case 48:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M10 28h44M6 36h52M14 44h36" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          `;
+        case 61:
+        case 63:
+        case 65:
+        case 80:
+        case 81:
+        case 82:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M18 34h26a9 9 0 1 0-8.4-12.5A13 13 0 0 0 18 34z"
+                    stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 42l-4 8M32 42l-4 8M42 42l-4 8" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-rain')}" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          `;
+        case 71:
+        case 73:
+        case 75:
+        case 77:
+        case 85:
+        case 86:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M18 34h26a9 9 0 1 0-8.4-12.5A13 13 0 0 0 18 34z"
+                    stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M24 44l-2 4M34 44l-2 4M44 44l-2 4" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          `;
+        case 95:
+        case 96:
+        case 99:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M18 34h26a9 9 0 1 0-8.4-12.5A13 13 0 0 0 18 34z"
+                    stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M30 40l-4 8h6l-2 8" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-sun')}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+        default:
+          return `
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="12" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--icon-cloud')}" stroke-width="3"/>
+            </svg>
+          `;
       }
-
-      if ([2].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="22" cy="22" r="8" stroke="${sun}" />
-          <path d="M18 42h26a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 18 42z" />
-        </svg>`;
-      }
-
-      if ([3].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 40h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 40z" />
-        </svg>`;
-      }
-
-      if ([45, 48].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round">
-          <path d="M12 26h40" />
-          <path d="M8 36h48" />
-          <path d="M16 46h32" />
-        </svg>`;
-      }
-
-      if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
-          <path d="M22 42l-4 8" stroke="${rain}" />
-          <path d="M34 42l-4 8" stroke="${rain}" />
-          <path d="M46 42l-4 8" stroke="${rain}" />
-        </svg>`;
-      }
-
-      if ([71, 73, 75, 77, 85, 86].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
-          <circle cx="22" cy="44" r="2" />
-          <circle cx="34" cy="46" r="2" />
-          <circle cx="46" cy="44" r="2" />
-        </svg>`;
-      }
-
-      if ([95, 96, 99].includes(code)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
-          <path d="M28 42l-4 8" stroke="${rain}" />
-          <path d="M40 42l-4 8" stroke="${rain}" />
-          <path d="M30 34l-4 8" stroke="${sun}" />
-          <path d="M40 34l-4 8" stroke="${sun}" />
-        </svg>`;
-      }
-
-      return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${night}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M38 12a16 16 0 1 0 12 28A14 14 0 0 1 38 12z" />
-      </svg>`;
-    }
-
-    function moonPhaseName(date) {
-      const lp = 2551443;
-      const newMoon = new Date("2001-01-24T13:35:00Z").getTime() / 1000;
-      const now = date.getTime() / 1000;
-      const phase = ((now - newMoon) % lp) / lp;
-
-      if (phase < 0.03 || phase > 0.97) return "New Moon";
-      if (phase < 0.22) return "Waxing Crescent";
-      if (phase < 0.28) return "First Quarter";
-      if (phase < 0.47) return "Waxing Gibbous";
-      if (phase < 0.53) return "Full Moon";
-      if (phase < 0.72) return "Waning Gibbous";
-      if (phase < 0.78) return "Last Quarter";
-      return "Waning Crescent";
     }
 
     function buildClockFace() {
       const clock = $("analogClock");
-      const size = clock.clientWidth || 230;
-      const center = size / 2;
+      if (!clock) return;
 
       clock.innerHTML = "";
 
       for (let i = 0; i < 60; i++) {
-        const t = document.createElement("div");
-        t.className = "tick" + (i % 5 === 0 ? " major" : "");
-        t.style.transform = `rotate(${i * 6}deg) translateX(-50%)`;
-        t.style.transformOrigin = `50% ${center - 5}px`;
-        clock.appendChild(t);
+        const tick = document.createElement("span");
+        tick.className = "tick" + (i % 5 === 0 ? " major" : "");
+        tick.style.transform = `rotate(${i * 6}deg)`;
+        clock.appendChild(tick);
       }
 
-      const numbers = [
-        { text: "12", angle: 0 },
-        { text: "3", angle: 90 },
-        { text: "6", angle: 180 },
-        { text: "9", angle: 270 }
-      ];
+      const numbers = [12, 3, 6, 9];
+      numbers.forEach((num) => {
+        const angle = (num / 12) * 2 * Math.PI - Math.PI / 2;
+        const x = 50 + Math.cos(angle) * 42;
+        const y = 50 + Math.sin(angle) * 42;
 
-      numbers.forEach(({ text, angle }) => {
-        const num = document.createElement("div");
-        num.className = `clock-number${text === "6" ? " six" : ""}`;
-
-        const radius = center - Math.max(26, size * 0.16);
-        const rad = (angle - 90) * (Math.PI / 180);
-        const x = center + radius * Math.cos(rad);
-        const y = center + radius * Math.sin(rad);
-
-        num.style.left = `${x}px`;
-        num.style.top = `${y}px`;
-        num.textContent = text;
-
-        clock.appendChild(num);
+        const label = document.createElement("span");
+        label.className = `clock-number ${num === 6 ? "six" : ""}`;
+        label.style.left = `${x}%`;
+        label.style.top = `${y}%`;
+        label.textContent = num;
+        clock.appendChild(label);
       });
 
-      const hour = document.createElement("div");
-      hour.className = "hand hour";
+      const hourHand = document.createElement("div");
+      hourHand.className = "hand hour";
+      hourHand.id = "hourHand";
 
-      const minute = document.createElement("div");
-      minute.className = "hand minute";
+      const minuteHand = document.createElement("div");
+      minuteHand.className = "hand minute";
+      minuteHand.id = "minuteHand";
 
-      const second = document.createElement("div");
-      second.className = "hand second";
+      const secondHand = document.createElement("div");
+      secondHand.className = "hand second";
+      secondHand.id = "secondHand";
 
-      const dot = document.createElement("div");
-      dot.className = "center-dot";
+      const center = document.createElement("span");
+      center.className = "center-dot";
 
-      clock.appendChild(hour);
-      clock.appendChild(minute);
-      clock.appendChild(second);
-      clock.appendChild(dot);
+      clock.appendChild(hourHand);
+      clock.appendChild(minuteHand);
+      clock.appendChild(secondHand);
+      clock.appendChild(center);
     }
 
     function updateClock() {
-      const parts = getLocalParts();
+      const now = getZonedDate(new Date(), TZ);
+      if (!now) return;
 
-      $("hh").textContent = parts.hour;
-      $("mm").textContent = parts.minute;
-      $("ss").textContent = parts.second;
-      $("dateString").textContent = formatDateLongFromParts(parts);
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const hourAngle = (hours % 12 + minutes / 60) * 30;
+      const minuteAngle = (minutes + seconds / 60) * 6;
+      const secondAngle = seconds * 6;
 
-      const hour = Number(parts.hour);
-      const minute = Number(parts.minute);
-      const second = Number(parts.second);
-      const milli = Number(parts.fractionalSecond || 0);
+      $("hourHand").style.transform = `rotate(${hourAngle}deg)`;
+      $("minuteHand").style.transform = `rotate(${minuteAngle}deg)`;
+      $("secondHand").style.transform = `rotate(${secondAngle}deg)`;
 
-      const secFloat = second + milli / 1000;
-      const hourDeg = (hour % 12) * 30 + minute * 0.5 + secFloat / 120;
-      const minDeg = minute * 6 + secFloat * 0.1;
-      const secDeg = secFloat * 6;
+      const hh = String(hours).padStart(2, "0");
+      const mm = String(minutes).padStart(2, "0");
+      const ss = String(seconds).padStart(2, "0");
+      setText("hh", hh);
+      setText("mm", mm);
+      setText("ss", ss);
 
-      const hands = document.querySelectorAll(".hand");
-      hands[0].style.transform = `rotate(${hourDeg - 90}deg)`;
-      hands[1].style.transform = `rotate(${minDeg - 90}deg)`;
-      hands[2].style.transform = `rotate(${secDeg - 90}deg)`;
+      setText("dateString", formatDateLong(now));
+    }
 
-      const localDate = getLocalDateObject(parts);
-      setText("moonPhaseLabel", moonPhaseName(localDate));
+    function initUnitToggle() {
+      const buttons = document.querySelectorAll(".unit-toggle button");
+      const saved = localStorage.getItem(UNIT_KEY);
+      if (saved) {
+        state.units.wind = saved;
+        buttons.forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.unit === saved);
+        });
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          state.units.wind = button.dataset.unit;
+          localStorage.setItem(UNIT_KEY, state.units.wind);
+          if (state.weather) renderWeather(state.weather);
+        });
+      });
+    }
+
+    function setLoading(section, value) {
+      document.querySelectorAll(`[data-section="${section}"]`).forEach((el) => {
+        el.setAttribute("data-loading", value ? "true" : "false");
+      });
+    }
+
+    async function fetchJson(url, fallback) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+        return await res.json();
+      } catch (err) {
+        console.warn(err);
+        return fallback;
+      }
     }
 
     async function loadWeather() {
-      if (!state.weather) setSectionLoading("weather", true);
-      let data;
+      setLoading("weather", true);
+      const weatherUrl = new URL("https://api.open-meteo.com/v1/forecast");
+      weatherUrl.searchParams.set("latitude", LAT);
+      weatherUrl.searchParams.set("longitude", LON);
+      weatherUrl.searchParams.set("hourly", "temperature_2m,precipitation_probability,precipitation,weather_code");
+      weatherUrl.searchParams.set("current", "temperature_2m,relative_humidity_2m,apparent_temperature,dew_point_2m,pressure_msl,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,visibility,precipitation,precipitation_probability,weather_code,uv_index,is_day,rain");
+      weatherUrl.searchParams.set("daily", "sunrise,sunset");
+      weatherUrl.searchParams.set("timezone", TZ);
 
-      try {
-        const params = new URLSearchParams({
-          latitude: LAT,
-          longitude: LON,
-          timezone: TZ,
-          current: [
-            "temperature_2m",
-            "apparent_temperature",
-            "relative_humidity_2m",
-            "dew_point_2m",
-            "pressure_msl",
-            "wind_speed_10m",
-            "wind_gusts_10m",
-            "wind_direction_10m",
-            "cloud_cover",
-            "visibility",
-            "precipitation",
-            "precipitation_probability",
-            "weather_code",
-            "uv_index",
-            "is_day",
-            "rain"
-          ].join(","),
-          hourly: [
-            "temperature_2m",
-            "precipitation_probability",
-            "precipitation",
-            "weather_code"
-          ].join(","),
-          daily: ["sunrise", "sunset"].join(",")
-        });
+      const fallback = buildDemoWeather();
+      const data = await fetchJson(weatherUrl.toString(), fallback);
 
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
-        if (!response.ok) throw new Error("Weather fetch failed");
-        const json = await response.json();
+      const hourly = data.hourly || {};
+      hourly.time = (hourly.time || []).map((t) => new Date(t));
+      data.hourly = hourly;
 
-        const current = json.current || {};
-        data = {
-          current: {
-            ...current,
-            time: current.time ? new Date(current.time) : new Date()
-          },
-          hourly: {
-            time: json.hourly?.time || [],
-            temperature_2m: json.hourly?.temperature_2m || [],
-            precipitation_probability: json.hourly?.precipitation_probability || [],
-            precipitation: json.hourly?.precipitation || [],
-            weather_code: json.hourly?.weather_code || []
-          },
-          daily: {
-            sunrise: (json.daily?.sunrise || []).map((t) => new Date(t)),
-            sunset: (json.daily?.sunset || []).map((t) => new Date(t))
-          }
-        };
-      } catch (error) {
-        data = buildDemoWeather();
-      }
+      const daily = data.daily || {};
+      daily.sunrise = (daily.sunrise || []).map((t) => new Date(t));
+      daily.sunset = (daily.sunset || []).map((t) => new Date(t));
+      data.daily = daily;
+
+      data.current = data.current || {};
+      data.current.time = data.current.time ? new Date(data.current.time) : new Date();
 
       state.weather = data;
       renderWeather(data);
-      setSectionLoading("weather", false);
-      triggerSectionFade("weather");
-
-      const parts = getLocalParts();
-      setText("lastUpdated", formatTimeHMFromParts(parts));
+      setLoading("weather", false);
+      setText("lastUpdated", formatTimeHMFromDate(getZonedDate(new Date(), TZ)));
     }
 
     async function loadAirQuality() {
-      if (!state.air) setSectionLoading("air", true);
-      let data;
+      setLoading("air", true);
+      const airUrl = new URL("https://air-quality-api.open-meteo.com/v1/air-quality");
+      airUrl.searchParams.set("latitude", LAT);
+      airUrl.searchParams.set("longitude", LON);
+      airUrl.searchParams.set("current", "us_aqi");
+      airUrl.searchParams.set("timezone", TZ);
 
-      try {
-        const params = new URLSearchParams({
-          latitude: LAT,
-          longitude: LON,
-          timezone: TZ,
-          current: "us_aqi"
-        });
-        const response = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?${params.toString()}`);
-        if (!response.ok) throw new Error("Air quality fetch failed");
-        const json = await response.json();
-        data = {
-          current: {
-            us_aqi: json.current?.us_aqi ?? null
-          }
-        };
-      } catch (error) {
-        data = buildDemoAirQuality();
-      }
-
+      const fallback = buildDemoAirQuality();
+      const data = await fetchJson(airUrl.toString(), fallback);
       state.air = data;
       renderAirQuality(data);
-      setSectionLoading("air", false);
-      triggerSectionFade("air");
+      setLoading("air", false);
     }
 
     const SunCalc = (() => {
       const PI = Math.PI;
       const rad = PI / 180;
+
       const dayMs = 1000 * 60 * 60 * 24;
       const J1970 = 2440588;
       const J2000 = 2451545;
-      const e = rad * 23.4397;
 
       const toJulian = (date) => date.valueOf() / dayMs - 0.5 + J1970;
       const fromJulian = (j) => new Date((j + 0.5 - J1970) * dayMs);
       const toDays = (date) => toJulian(date) - J2000;
 
-      const rightAscension = (l, b) => Math.atan2(Math.sin(l) * Math.cos(e) - Math.tan(b) * Math.sin(e), Math.cos(l));
-      const declination = (l, b) => Math.asin(Math.sin(b) * Math.cos(e) + Math.cos(b) * Math.sin(e) * Math.sin(l));
-      const azimuth = (H, phi, dec) => Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi));
-      const altitude = (H, phi, dec) => Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H));
+      const e = rad * 23.4397;
+
+      const rightAscension = (l, b) =>
+        Math.atan2(Math.sin(l) * Math.cos(e) - Math.tan(b) * Math.sin(e), Math.cos(l));
+
+      const declination = (l, b) =>
+        Math.asin(Math.sin(b) * Math.cos(e) + Math.cos(b) * Math.sin(e) * Math.sin(l));
+
+      const azimuth = (H, phi, dec) =>
+        Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi));
+
+      const altitude = (H, phi, dec) =>
+        Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H));
+
       const siderealTime = (d, lw) => rad * (280.16 + 360.9856235 * d) - lw;
+
       const astroRefraction = (h) => {
         if (h < 0) h = 0;
         return 0.0002967 / Math.tan(h + 0.00312536 / (h + 0.08901179));
@@ -2410,14 +2322,19 @@
       if (!temps.length || endIndex <= index) {
         setText("summaryTemp", "—");
         setText("summaryRain", "—");
+        const curve = $("summaryCurve");
+        const glow = $("summaryCurveGlow");
+        if (curve) curve.setAttribute("d", "");
+        if (glow) glow.setAttribute("d", "");
         return;
       }
 
-      const tempSlice = temps.slice(index, endIndex).filter((v) => Number.isFinite(v));
+      const tempSlice = temps.slice(index, endIndex);
+      const tempValues = tempSlice.filter((v) => Number.isFinite(v));
       const probSlice = probs.slice(index, endIndex).filter((v) => Number.isFinite(v));
 
-      const minTemp = tempSlice.length ? Math.min(...tempSlice) : null;
-      const maxTemp = tempSlice.length ? Math.max(...tempSlice) : null;
+      const minTemp = tempValues.length ? Math.min(...tempValues) : null;
+      const maxTemp = tempValues.length ? Math.max(...tempValues) : null;
       const maxProb = probSlice.length ? Math.max(...probSlice) : null;
 
       const tempLabel = minTemp == null || maxTemp == null
@@ -2427,6 +2344,39 @@
 
       setText("summaryTemp", tempLabel);
       setText("summaryRain", probLabel);
+
+      const curve = $("summaryCurve");
+      const glow = $("summaryCurveGlow");
+      if (curve && glow && tempValues.length) {
+        const width = 320;
+        const height = 90;
+        const paddingTop = 8;
+        const paddingBottom = 12;
+        const usableHeight = height - paddingTop - paddingBottom;
+        const points = tempSlice.map((temp, i) => {
+          const x = (i / (tempSlice.length - 1 || 1)) * width;
+          const t = Number.isFinite(temp) ? temp : minTemp ?? 0;
+          const y = height - paddingBottom - ((t - minTemp) / (maxTemp - minTemp || 1)) * usableHeight;
+          return { x, y };
+        });
+
+        let d = "";
+        if (points.length) {
+          d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+          for (let i = 1; i < points.length; i++) {
+            const prev = points[i - 1];
+            const curr = points[i];
+            const midX = (prev.x + curr.x) / 2;
+            const midY = (prev.y + curr.y) / 2;
+            d += ` Q ${prev.x.toFixed(1)} ${prev.y.toFixed(1)} ${midX.toFixed(1)} ${midY.toFixed(1)}`;
+          }
+          const last = points[points.length - 1];
+          d += ` T ${last.x.toFixed(1)} ${last.y.toFixed(1)}`;
+        }
+
+        curve.setAttribute("d", d);
+        glow.setAttribute("d", d);
+      }
     }
 
     function formatDurationMinutes(minutes) {
