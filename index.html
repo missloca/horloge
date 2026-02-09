@@ -264,6 +264,13 @@
       gap: 10px;
     }
 
+    .sun-moon-card {
+      max-width: 360px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .sun-moon-row {
       display: flex;
       align-items: center;
@@ -306,7 +313,7 @@
 
     .mini-item {
       display: grid;
-      grid-template-rows: auto 1fr auto auto;
+      grid-template-rows: auto 40px auto auto;
       justify-items: center;
       gap: 6px;
       padding: 12px 8px 10px;
@@ -319,13 +326,13 @@
     .mini-icon {
       display: grid;
       place-items: center;
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
     }
 
     .mini-icon svg {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
     }
 
     .mini-time {
@@ -399,6 +406,19 @@
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .condition-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 44px;
+    }
+
+    .condition-icon svg {
+      width: 38px;
+      height: 38px;
     }
 
     .condition-text {
@@ -548,6 +568,7 @@
       .right-col { max-width: 100%; margin-left: 0; }
       .analog { width: 210px; height: 210px; }
       .mini-forecast-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sun-moon-card { max-width: 100%; }
     }
   </style>
 </head>
@@ -563,7 +584,7 @@
           <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/>
           <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Last updated at <span id="lastUpdated">--:--</span>
+        Last updated at <span id="lastUpdated">—</span>
       </div>
     </div>
 
@@ -576,18 +597,18 @@
               <span id="hh">00</span><span class="blink">:</span><span id="mm">00</span>
               <span class="seconds">:<span id="ss">00</span></span>
             </div>
-            <div class="digital-date" id="dateString">--</div>
+            <div class="digital-date" id="dateString">—</div>
           </div>
         </div>
 
-        <div class="card sun-moon">
+        <div class="card sun-moon sun-moon-card">
           <div class="sun-moon-row">
             <div>Sunrise</div>
-            <div id="sunrise">--:--</div>
+            <div id="sunrise">—</div>
           </div>
           <div class="sun-moon-row">
             <div>Sunset</div>
-            <div id="sunset">--:--</div>
+            <div id="sunset">—</div>
           </div>
           <div class="sun-moon-row">
             <div class="sun-moon-label">
@@ -600,13 +621,19 @@
               </span>
               Moon phase
             </div>
-            <div id="moonPhase">--</div>
+            <div id="moonPhase">—</div>
           </div>
         </div>
 
         <div class="card mini-forecast">
           <div class="weather-title">Next 6 hours</div>
           <div class="mini-forecast-row" id="miniForecast"></div>
+        </div>
+
+        <div class="card weather-card" id="todaySummary">
+          <div class="weather-title">Today summary</div>
+          <div class="weather-value" id="summaryTemp">—</div>
+          <div class="weather-subtitle">Max rain chance <span id="summaryRain">—</span></div>
         </div>
       </div>
 
@@ -624,8 +651,8 @@
               Conditions
             </div>
             <div class="condition-row">
-              <div id="conditionIcon"></div>
-              <div class="condition-text" id="conditionText">--</div>
+              <div id="conditionIcon" class="condition-icon"></div>
+              <div class="condition-text" id="conditionText">—</div>
             </div>
           </div>
 
@@ -640,8 +667,8 @@
               </span>
               Temperature
             </div>
-            <div class="weather-value" id="temp">--°C</div>
-            <div class="weather-subtitle">Feels like <span id="feels">--°C</span></div>
+            <div class="weather-value" id="temp">—</div>
+            <div class="weather-subtitle">Feels like <span id="feels">—</span></div>
           </div>
 
           <div class="card weather-card">
@@ -655,8 +682,8 @@
               </span>
               Humidity
             </div>
-            <div class="weather-value" id="humidity">--%</div>
-            <div class="weather-subtitle">Dew point <span id="dewPoint">--°C</span></div>
+            <div class="weather-value" id="humidity">—</div>
+            <div class="weather-subtitle">Dew point <span id="dewPoint">—</span></div>
           </div>
 
           <div class="card weather-card">
@@ -669,7 +696,7 @@
               </span>
               Pressure
             </div>
-            <div class="weather-value" id="pressure">-- hPa</div>
+            <div class="weather-value" id="pressure">—</div>
           </div>
 
           <div class="card weather-card">
@@ -682,9 +709,9 @@
               </span>
               Wind
             </div>
-            <div class="weather-value" id="wind">-- km/h</div>
+            <div class="weather-value" id="wind">—</div>
             <div class="weather-subtitle">
-              Gusts <span id="gusts">-- km/h</span> <span class="badge hidden" id="gustAlert">High</span>
+              Gusts <span id="gusts">—</span> <span class="badge hidden" id="gustAlert">High</span>
             </div>
             <div class="wind-direction">
               <span class="wind-arrow" id="windArrow" aria-hidden="true">
@@ -693,7 +720,7 @@
                   <path d="M12 10v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
               </span>
-              <span id="windDir">--</span>
+              <span id="windDir">—</span>
             </div>
           </div>
 
@@ -707,7 +734,7 @@
               </span>
               UV index <span class="badge hidden" id="uvAlert">High</span>
             </div>
-            <div class="weather-value" id="uv">--</div>
+            <div class="weather-value" id="uv">—</div>
           </div>
 
           <div class="card weather-card">
@@ -721,7 +748,7 @@
               </span>
               Visibility
             </div>
-            <div class="weather-value" id="visibility">-- km</div>
+            <div class="weather-value" id="visibility">—</div>
           </div>
 
           <div class="card weather-card">
@@ -735,7 +762,7 @@
               </span>
               Cloud cover
             </div>
-            <div class="weather-value" id="clouds">--%</div>
+            <div class="weather-value" id="clouds">—</div>
           </div>
 
           <div class="card weather-card">
@@ -751,7 +778,7 @@
               </span>
               Precipitation probability
             </div>
-            <div class="weather-value" id="precipProb">--%</div>
+            <div class="weather-value" id="precipProb">—</div>
           </div>
 
           <div class="card weather-card">
@@ -779,7 +806,7 @@
               </span>
               Air quality <span class="badge hidden" id="aqiAlert">Poor</span>
             </div>
-            <div class="weather-value" id="airQuality">Not available</div>
+            <div class="weather-value" id="airQuality">—</div>
           </div>
 
           <div class="card weather-card">
@@ -829,13 +856,14 @@
 
     const $ = (id) => document.getElementById(id);
 
-    function formatValue(value, formatter, fallback = "--") {
+    function formatValue(value, formatter, fallback = "—") {
       if (!Number.isFinite(value)) return fallback;
       return formatter(value);
     }
 
     function formatTimeHMFromParts(parts) {
-      return `${parts.hour}:${parts.minute}`;
+      if (!parts?.hour || !parts?.minute) return "—";
+      return `${parts.hour} h ${parts.minute}`;
     }
 
     function formatDateLongFromParts(parts) {
@@ -852,8 +880,15 @@
 
     function formatTimeHMFromString(timeString) {
       const parts = splitLocalTime(timeString);
-      if (!parts) return "--:--";
-      return `${parts.hour}:${parts.minute}`;
+      if (!parts) return "—";
+      return `${parts.hour} h ${parts.minute}`;
+    }
+
+    function formatHourAmPm(hourValue) {
+      if (!Number.isFinite(hourValue)) return "—";
+      const hour12 = hourValue % 12 || 12;
+      const suffix = hourValue >= 12 ? "PM" : "AM";
+      return `${hour12}${suffix}`;
     }
 
     function getParisParts(date = new Date()) {
@@ -1044,10 +1079,12 @@
       return "Waning Crescent";
     }
 
-    function buildTicks() {
+    function buildClockFace() {
       const clock = $("analogClock");
       const size = clock.clientWidth || 230;
       const center = size / 2;
+
+      clock.innerHTML = "";
 
       for (let i = 0; i < 60; i++) {
         const t = document.createElement("div");
@@ -1068,7 +1105,7 @@
         const num = document.createElement("div");
         num.className = "clock-number";
 
-        const radius = center - 28;
+        const radius = center - Math.max(32, size * 0.18);
         const rad = (angle - 90) * (Math.PI / 180);
         const x = center + radius * Math.cos(rad);
         const y = center + radius * Math.sin(rad);
@@ -1153,14 +1190,14 @@
         state.air = data;
         renderAirQuality(data);
       } catch (e) {
-        if (!state.air) $("airQuality").textContent = "Not available";
+        if (!state.air) $("airQuality").textContent = "—";
       }
     }
 
     function renderAirQuality(data) {
       const aqi = data?.current?.us_aqi;
       if (aqi == null) {
-        $("airQuality").textContent = "Not available";
+        $("airQuality").textContent = "—";
         return;
       }
 
@@ -1190,13 +1227,13 @@
       $("rainRate").textContent = `${rainRate.toFixed(1)} mm per hour`;
 
       const code = Number.isFinite(c.weather_code) ? c.weather_code : null;
-      $("conditionText").textContent = code != null ? weatherLabel(code) : "--";
+      $("conditionText").textContent = code != null ? weatherLabel(code) : "—";
       $("conditionIcon").innerHTML = weatherIcon(code ?? -1);
 
       const sunrise = data.daily?.sunrise?.[0];
       const sunset = data.daily?.sunset?.[0];
-      $("sunrise").textContent = sunrise ? formatTimeHMFromString(sunrise) : "--:--";
-      $("sunset").textContent = sunset ? formatTimeHMFromString(sunset) : "--:--";
+      $("sunrise").textContent = sunrise ? formatTimeHMFromString(sunrise) : "—";
+      $("sunset").textContent = sunset ? formatTimeHMFromString(sunset) : "—";
 
       const windDir = Number.isFinite(c.wind_direction_10m) ? c.wind_direction_10m : null;
       updateWindDirection(windDir);
@@ -1204,6 +1241,7 @@
 
       renderSparkline(data);
       renderMiniForecast(data);
+      renderTodaySummary(data);
     }
 
     function renderSparkline(data) {
@@ -1243,23 +1281,40 @@
 
       const sunrise = data.daily?.sunrise?.[0] || null;
       const currentTime = data.current?.time;
+      const current = data.current || {};
 
-      if (!currentTime || !times.length) return;
+      if (!times.length) return;
 
       const startIndex = times.findIndex((t) => t === currentTime);
       const index = startIndex >= 0 ? startIndex : 0;
 
-      const sliceTimes = times.slice(index, index + 6);
+      const sliceTimes = times.slice(index + 1, index + 6);
+
+      const nowItem = document.createElement("div");
+      nowItem.className = "mini-item";
+
+      const nowTemp = Number.isFinite(current.temperature_2m) ? `${Math.round(current.temperature_2m)}°` : "—";
+      const nowProb = Number.isFinite(current.precipitation_probability) ? `${Math.round(current.precipitation_probability)}%` : "—";
+      const nowCode = Number.isFinite(current.weather_code) ? current.weather_code : -1;
+
+      nowItem.innerHTML = `
+        <div class="mini-time">Now</div>
+        <div class="mini-icon">${weatherIcon(nowCode)}</div>
+        <div class="mini-temp">${nowTemp}</div>
+        <div class="mini-precip">${nowProb}</div>
+      `;
+      container.appendChild(nowItem);
 
       sliceTimes.forEach((time, i) => {
         const timeParts = splitLocalTime(time);
-        const label = i === 0 ? "Now" : (timeParts ? `${timeParts.hour}h` : "--");
+        const hourValue = timeParts ? Number(timeParts.hour) : NaN;
+        const label = formatHourAmPm(hourValue);
 
-        const temp = temps[index + i];
-        const prob = probs[index + i];
-        const code = codes[index + i];
-        const tempLabel = Number.isFinite(temp) ? `${Math.round(temp)}°` : "--";
-        const probLabel = Number.isFinite(prob) ? `${Math.round(prob)}%` : "--";
+        const temp = temps[index + 1 + i];
+        const prob = probs[index + 1 + i];
+        const code = codes[index + 1 + i];
+        const tempLabel = Number.isFinite(temp) ? `${Math.round(temp)}°` : "—";
+        const probLabel = Number.isFinite(prob) ? `${Math.round(prob)}%` : "—";
 
         const item = document.createElement("div");
         item.className = "mini-item";
@@ -1284,6 +1339,37 @@
       });
     }
 
+    function renderTodaySummary(data) {
+      const times = data.hourly?.time || [];
+      const temps = data.hourly?.temperature_2m || [];
+      const probs = data.hourly?.precipitation_probability || [];
+      const currentTime = data.current?.time;
+      const startIndex = times.findIndex((t) => t === currentTime);
+      const index = startIndex >= 0 ? startIndex : 0;
+      const endIndex = Math.min(index + 24, temps.length);
+
+      if (!temps.length || endIndex <= index) {
+        $("summaryTemp").textContent = "—";
+        $("summaryRain").textContent = "—";
+        return;
+      }
+
+      const tempSlice = temps.slice(index, endIndex).filter((v) => Number.isFinite(v));
+      const probSlice = probs.slice(index, endIndex).filter((v) => Number.isFinite(v));
+
+      const minTemp = tempSlice.length ? Math.min(...tempSlice) : null;
+      const maxTemp = tempSlice.length ? Math.max(...tempSlice) : null;
+      const maxProb = probSlice.length ? Math.max(...probSlice) : null;
+
+      const tempLabel = minTemp == null || maxTemp == null
+        ? "—"
+        : `${Math.round(minTemp)}° / ${Math.round(maxTemp)}°`;
+      const probLabel = maxProb == null ? "—" : `${Math.round(maxProb)}%`;
+
+      $("summaryTemp").textContent = tempLabel;
+      $("summaryRain").textContent = probLabel;
+    }
+
     function updateAlerts(current) {
       const uvAlert = $("uvAlert");
       const gustAlert = $("gustAlert");
@@ -1303,7 +1389,7 @@
     }
 
     function degToCompass(deg) {
-      if (!Number.isFinite(deg)) return "--";
+      if (!Number.isFinite(deg)) return "—";
       const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
       const index = Math.round(((deg % 360) / 45)) % 8;
       return directions[index];
@@ -1312,7 +1398,7 @@
     function updateWindDirection(deg) {
       const arrow = $("windArrow");
       if (!Number.isFinite(deg)) {
-        $("windDir").textContent = "--";
+        $("windDir").textContent = "—";
         arrow.style.transform = "rotate(0deg)";
         return;
       }
@@ -1362,7 +1448,7 @@
     function init() {
       document.querySelector(".title").textContent = `${CITY}, France`;
 
-      buildTicks();
+      buildClockFace();
       updateClock();
       setInterval(updateClock, 1000);
 
@@ -1377,6 +1463,15 @@
       });
 
       initStars();
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          buildClockFace();
+          updateClock();
+        }, 200);
+      });
     }
 
     init();
