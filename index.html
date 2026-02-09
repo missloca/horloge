@@ -12,12 +12,14 @@
       --text: #f5f7ff;
       --muted: #d4d9ee;
       --muted-strong: #e6ebf9;
-      --accent: #86dcff;
+      --accent: #7fe7ff;
+      --accent-strong: #59d2ff;
+      --accent-secondary: #b48cff;
       --shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
       --card-radius: 18px;
       --card-gap: 16px;
       --blur: blur(22px);
-      --glow: 0 0 30px rgba(116, 211, 255, 0.2);
+      --glow: 0 0 30px rgba(116, 211, 255, 0.18);
 
       --icon-stroke: #d8dee9;
       --icon-cloud: #c7d1e2;
@@ -88,7 +90,7 @@
       gap: 8px;
       padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.18);
       border: 1px solid rgba(255, 255, 255, 0.26);
       color: var(--muted-strong);
       font-size: 0.9rem;
@@ -96,6 +98,16 @@
       letter-spacing: 0.2px;
       white-space: nowrap;
       box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.06);
+    }
+
+    .last-updated svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-strong);
+    }
+
+    .last-updated span {
+      color: var(--accent);
     }
 
     .layout {
@@ -140,25 +152,25 @@
       width: 230px;
       height: 230px;
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-      border: 1px solid rgba(255,255,255,0.22);
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.16), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.28);
       position: relative;
-      box-shadow: var(--glow);
+      box-shadow: var(--glow), inset 0 0 18px rgba(255, 255, 255, 0.08);
     }
 
     .tick {
       position: absolute;
       width: 2px;
-      height: 10px;
-      background: rgba(255,255,255,0.45);
+      height: 11px;
+      background: rgba(255,255,255,0.5);
       top: 6px;
       left: 50%;
       transform-origin: 50% 110px;
     }
 
     .tick.major {
-      height: 16px;
-      background: rgba(255,255,255,0.85);
+      height: 18px;
+      background: rgba(255,255,255,0.9);
     }
 
     .hand {
@@ -168,31 +180,35 @@
       transform-origin: 0% 50%;
       transform: rotate(90deg);
       border-radius: 6px;
+      transition: transform 0.4s cubic-bezier(0.4, 0.8, 0.2, 1);
     }
 
     .hand.hour {
-      width: 66px;
+      width: 64px;
       height: 6px;
-      background: linear-gradient(90deg, #fff, #9ad6ff);
+      background: linear-gradient(90deg, #ffffff, #8cd6ff);
+      box-shadow: 0 0 8px rgba(140, 214, 255, 0.35);
     }
 
     .hand.minute {
-      width: 92px;
+      width: 96px;
       height: 4px;
-      background: linear-gradient(90deg, #fff, #b8e6ff);
+      background: linear-gradient(90deg, #ffffff, #bfeaff);
+      box-shadow: 0 0 8px rgba(140, 214, 255, 0.28);
     }
 
     .hand.second {
-      width: 102px;
+      width: 108px;
       height: 2px;
-      background: #ff8cc6;
-      box-shadow: 0 0 10px rgba(255, 140, 198, 0.5);
+      background: var(--accent-secondary);
+      box-shadow: 0 0 10px rgba(180, 140, 255, 0.4);
+      transition: transform 0.15s linear;
     }
 
     .center-dot {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       background: #fff;
       border-radius: 50%;
       left: 50%;
@@ -203,13 +219,14 @@
 
     .clock-number {
       position: absolute;
-      font-size: 0.9rem;
-      color: var(--muted-strong);
-      font-weight: 600;
-      letter-spacing: 0.3px;
+      font-size: 0.95rem;
+      color: #f0f3ff;
+      font-weight: 650;
+      letter-spacing: 0.4px;
       transform: translate(-50%, -50%);
       user-select: none;
       pointer-events: none;
+      text-shadow: 0 2px 6px rgba(9, 12, 24, 0.6);
     }
 
     .digital { text-align: center; }
@@ -218,6 +235,7 @@
       font-size: 2.6rem;
       font-weight: 700;
       letter-spacing: 2px;
+      color: var(--accent);
     }
 
     .digital-time .seconds {
@@ -255,15 +273,26 @@
       gap: 10px;
     }
 
+    .sun-moon-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .moon-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 22px;
       height: 22px;
-      margin-right: 8px;
+      margin-right: 4px;
       flex: 0 0 auto;
       color: var(--icon-night);
+    }
+
+    .moon-icon svg {
+      width: 18px;
+      height: 18px;
     }
 
     .mini-forecast { display: grid; gap: 12px; }
@@ -271,19 +300,32 @@
     .mini-forecast-row {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
       align-items: stretch;
     }
 
     .mini-item {
       display: grid;
+      grid-template-rows: auto 1fr auto auto;
       justify-items: center;
       gap: 6px;
-      padding: 10px 8px;
+      padding: 12px 8px 10px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.14);
       text-align: center;
+    }
+
+    .mini-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+    }
+
+    .mini-icon svg {
+      width: 28px;
+      height: 28px;
     }
 
     .mini-time {
@@ -296,19 +338,24 @@
     .mini-temp {
       font-size: 0.85rem;
       font-weight: 600;
+      color: var(--accent);
     }
 
     .mini-precip {
       font-size: 0.7rem;
-      color: var(--accent);
+      color: var(--accent-secondary);
     }
 
     .mini-marker {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: #ffd36b;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(255, 211, 107, 0.14);
+      border: 1px solid rgba(255, 211, 107, 0.3);
     }
 
     .grid {
@@ -330,11 +377,22 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .weather-subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+      font-weight: 500;
+      text-transform: none;
     }
 
     .weather-value {
       font-size: 1.6rem;
       font-weight: 600;
+      color: var(--accent);
     }
 
     .condition-row {
@@ -346,6 +404,7 @@
     .condition-text {
       font-weight: 600;
       font-size: 1.05rem;
+      color: var(--accent);
     }
 
     .metric-icon {
@@ -377,9 +436,9 @@
       border-radius: 999px;
       font-size: 0.7rem;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      color: var(--muted-strong);
+      background: rgba(127, 231, 255, 0.18);
+      border: 1px solid rgba(127, 231, 255, 0.45);
+      color: var(--accent);
       white-space: nowrap;
     }
 
@@ -430,16 +489,27 @@
     }
 
     .signature {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       opacity: 0.9;
       font-weight: 600;
       letter-spacing: 0.3px;
       color: var(--muted-strong);
       padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.18);
       border: 1px solid rgba(255, 255, 255, 0.26);
       white-space: nowrap;
       box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.06);
+    }
+
+    .signature-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-secondary);
+      box-shadow: 0 0 8px rgba(180, 140, 255, 0.6);
     }
 
     .refresh-btn {
@@ -464,7 +534,7 @@
 
     .status-title {
       font-weight: 600;
-      color: #ffd1dc;
+      color: var(--accent-secondary);
     }
 
     .status-details {
@@ -488,7 +558,13 @@
   <div class="container">
     <div class="header">
       <div class="title">Toulon, France</div>
-      <div class="last-updated">Last updated at <span id="lastUpdated">--:--</span></div>
+      <div class="last-updated">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Last updated at <span id="lastUpdated">--:--</span>
+      </div>
     </div>
 
     <div class="layout">
@@ -514,11 +590,11 @@
             <div id="sunset">--:--</div>
           </div>
           <div class="sun-moon-row">
-            <div>
+            <div class="sun-moon-label">
               <span class="moon-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M15.5 3.5a8.5 8.5 0 1 0 5.8 14.6A7.4 7.4 0 0 1 15.5 3.5z"
-                        stroke="currentColor" stroke-width="1.8"
+                  <path d="M16 4a8 8 0 1 0 4 14.2A7.2 7.2 0 0 1 16 4z"
+                        stroke="currentColor" stroke-width="1.5"
                         stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
@@ -565,7 +641,7 @@
               Temperature
             </div>
             <div class="weather-value" id="temp">--°C</div>
-            <div class="weather-title">Feels like <span id="feels">--°C</span></div>
+            <div class="weather-subtitle">Feels like <span id="feels">--°C</span></div>
           </div>
 
           <div class="card weather-card">
@@ -580,7 +656,7 @@
               Humidity
             </div>
             <div class="weather-value" id="humidity">--%</div>
-            <div class="weather-title">Dew point <span id="dewPoint">--°C</span></div>
+            <div class="weather-subtitle">Dew point <span id="dewPoint">--°C</span></div>
           </div>
 
           <div class="card weather-card">
@@ -607,7 +683,7 @@
               Wind
             </div>
             <div class="weather-value" id="wind">-- km/h</div>
-            <div class="weather-title">
+            <div class="weather-subtitle">
               Gusts <span id="gusts">-- km/h</span> <span class="badge hidden" id="gustAlert">High</span>
             </div>
             <div class="wind-direction">
@@ -720,7 +796,7 @@
               <polyline id="tempLine" class="temp" points=""></polyline>
               <polyline id="precipLine" class="precip" points=""></polyline>
             </svg>
-            <div class="weather-title">Mini temp curve + precip probability</div>
+            <div class="weather-subtitle">Mini temp curve + precip probability</div>
           </div>
         </div>
 
@@ -734,7 +810,7 @@
     </div>
 
     <div class="footer">
-      <div class="signature">B. Geeverding</div>
+      <div class="signature"><span class="signature-dot" aria-hidden="true"></span>B. Geeverding</div>
       <button class="refresh-btn" id="refreshBtn">Refresh</button>
     </div>
   </div>
@@ -752,6 +828,11 @@
     };
 
     const $ = (id) => document.getElementById(id);
+
+    function formatValue(value, formatter, fallback = "--") {
+      if (!Number.isFinite(value)) return fallback;
+      return formatter(value);
+    }
 
     function formatTimeHMFromParts(parts) {
       return `${parts.hour}:${parts.minute}`;
@@ -781,6 +862,7 @@
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
+        fractionalSecondDigits: 3,
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -964,11 +1046,14 @@
 
     function buildTicks() {
       const clock = $("analogClock");
+      const size = clock.clientWidth || 230;
+      const center = size / 2;
 
       for (let i = 0; i < 60; i++) {
         const t = document.createElement("div");
         t.className = "tick" + (i % 5 === 0 ? " major" : "");
         t.style.transform = `rotate(${i * 6}deg) translateX(-50%)`;
+        t.style.transformOrigin = `50% ${center - 5}px`;
         clock.appendChild(t);
       }
 
@@ -983,10 +1068,10 @@
         const num = document.createElement("div");
         num.className = "clock-number";
 
-        const radius = 92;
+        const radius = center - 28;
         const rad = (angle - 90) * (Math.PI / 180);
-        const x = 115 + radius * Math.cos(rad);
-        const y = 115 + radius * Math.sin(rad);
+        const x = center + radius * Math.cos(rad);
+        const y = center + radius * Math.sin(rad);
 
         num.style.left = `${x}px`;
         num.style.top = `${y}px`;
@@ -1024,10 +1109,12 @@
       const hour = Number(parts.hour);
       const minute = Number(parts.minute);
       const second = Number(parts.second);
+      const milli = Number(parts.fractionalSecond || 0);
 
-      const hourDeg = (hour % 12) * 30 + minute * 0.5;
-      const minDeg = minute * 6 + second * 0.1;
-      const secDeg = second * 6;
+      const secFloat = second + milli / 1000;
+      const hourDeg = (hour % 12) * 30 + minute * 0.5 + secFloat / 120;
+      const minDeg = minute * 6 + secFloat * 0.1;
+      const secDeg = secFloat * 6;
 
       const hands = document.querySelectorAll(".hand");
       hands[0].style.transform = `rotate(${hourDeg - 90}deg)`;
@@ -1086,27 +1173,25 @@
       const c = data.current;
       if (!c) return;
 
-      $("temp").textContent = `${Math.round(c.temperature_2m)}°C`;
-      $("feels").textContent = `${Math.round(c.apparent_temperature)}°C`;
-      $("humidity").textContent = `${Math.round(c.relative_humidity_2m)}%`;
-
-      const dewPointValue = Number.isFinite(c.dew_point_2m) ? Math.round(c.dew_point_2m) : 0;
-      $("dewPoint").textContent = `${dewPointValue}°C`;
-
-      $("pressure").textContent = `${Math.round(c.pressure_msl)} hPa`;
-      $("wind").textContent = `${Math.round(c.wind_speed_10m)} km/h`;
-      $("gusts").textContent = `${Math.round(c.wind_gusts_10m)} km/h`;
-      $("uv").textContent = `${Math.round(c.uv_index)}`;
-      $("visibility").textContent = `${(c.visibility / 1000).toFixed(1)} km`;
-      $("clouds").textContent = `${Math.round(c.cloud_cover)}%`;
-      $("precipProb").textContent = `${Math.round(c.precipitation_probability)}%`;
+      $("temp").textContent = formatValue(c.temperature_2m, (v) => `${Math.round(v)}°C`);
+      $("feels").textContent = formatValue(c.apparent_temperature, (v) => `${Math.round(v)}°C`);
+      $("humidity").textContent = formatValue(c.relative_humidity_2m, (v) => `${Math.round(v)}%`);
+      $("dewPoint").textContent = formatValue(c.dew_point_2m, (v) => `${Math.round(v)}°C`);
+      $("pressure").textContent = formatValue(c.pressure_msl, (v) => `${Math.round(v)} hPa`);
+      $("wind").textContent = formatValue(c.wind_speed_10m, (v) => `${Math.round(v)} km/h`);
+      $("gusts").textContent = formatValue(c.wind_gusts_10m, (v) => `${Math.round(v)} km/h`);
+      $("uv").textContent = formatValue(c.uv_index, (v) => `${Math.round(v)}`);
+      $("visibility").textContent = formatValue(c.visibility, (v) => `${(v / 1000).toFixed(1)} km`);
+      $("clouds").textContent = formatValue(c.cloud_cover, (v) => `${Math.round(v)}%`);
+      $("precipProb").textContent = formatValue(c.precipitation_probability, (v) => `${Math.round(v)}%`);
 
       const rainRateRaw = c.rain ?? c.precipitation;
       const rainRate = Number.isFinite(rainRateRaw) ? rainRateRaw : 0;
       $("rainRate").textContent = `${rainRate.toFixed(1)} mm per hour`;
 
-      $("conditionText").textContent = weatherLabel(c.weather_code);
-      $("conditionIcon").innerHTML = weatherIcon(c.weather_code);
+      const code = Number.isFinite(c.weather_code) ? c.weather_code : null;
+      $("conditionText").textContent = code != null ? weatherLabel(code) : "--";
+      $("conditionIcon").innerHTML = weatherIcon(code ?? -1);
 
       const sunrise = data.daily?.sunrise?.[0];
       const sunset = data.daily?.sunset?.[0];
@@ -1173,14 +1258,16 @@
         const temp = temps[index + i];
         const prob = probs[index + i];
         const code = codes[index + i];
+        const tempLabel = Number.isFinite(temp) ? `${Math.round(temp)}°` : "--";
+        const probLabel = Number.isFinite(prob) ? `${Math.round(prob)}%` : "--";
 
         const item = document.createElement("div");
         item.className = "mini-item";
         item.innerHTML = `
           <div class="mini-time">${label}</div>
-          <div>${weatherIcon(code)}</div>
-          <div class="mini-temp">${Math.round(temp)}°</div>
-          ${Number.isFinite(prob) ? `<div class="mini-precip">${Math.round(prob)}%</div>` : `<div class="mini-precip">&nbsp;</div>`}
+          <div class="mini-icon">${weatherIcon(code)}</div>
+          <div class="mini-temp">${tempLabel}</div>
+          <div class="mini-precip">${probLabel}</div>
         `;
 
         if (sunrise) {
