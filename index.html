@@ -6,17 +6,17 @@
   <title>Toulon — Clock & Weather</title>
   <style>
     :root {
-      --glass: rgba(16, 22, 40, 0.68);
-      --glass-strong: rgba(16, 22, 40, 0.78);
-      --border: rgba(255, 255, 255, 0.16);
+      --glass: rgba(16, 22, 40, 0.76);
+      --glass-strong: rgba(14, 20, 40, 0.84);
+      --border: rgba(255, 255, 255, 0.2);
       --text: #f5f7ff;
       --muted: #d4d9ee;
       --muted-strong: #e6ebf9;
       --accent: #86dcff;
-      --shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+      --shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
       --card-radius: 18px;
       --card-gap: 16px;
-      --blur: blur(20px);
+      --blur: blur(22px);
       --glow: 0 0 30px rgba(116, 211, 255, 0.2);
 
       --icon-stroke: #d8dee9;
@@ -36,7 +36,7 @@
       margin: 0;
       font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      background: radial-gradient(circle at 20% 10%, #16233f 0%, #0c1326 52%, #070b18 100%);
+      background: radial-gradient(circle at 12% 8%, #1a2750 0%, #0b1226 45%, #060812 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -46,11 +46,13 @@
       inset: 0;
       z-index: -2;
       background:
-        radial-gradient(780px 420px at 80% 10%, rgba(98, 120, 255, 0.16), transparent 72%),
-        radial-gradient(680px 360px at 15% 88%, rgba(255, 120, 180, 0.12), transparent 75%),
-        radial-gradient(520px 300px at 50% 40%, rgba(120, 230, 255, 0.12), transparent 76%),
-        radial-gradient(520px 300px at 30% 30%, rgba(195, 120, 255, 0.10), transparent 78%),
-        radial-gradient(460px 260px at 70% 70%, rgba(255, 90, 90, 0.08), transparent 80%);
+        radial-gradient(900px 520px at 78% 8%, rgba(120, 140, 255, 0.18), transparent 78%),
+        radial-gradient(820px 440px at 12% 86%, rgba(255, 120, 200, 0.14), transparent 80%),
+        radial-gradient(620px 380px at 48% 38%, rgba(110, 230, 255, 0.12), transparent 82%),
+        radial-gradient(620px 360px at 22% 28%, rgba(210, 120, 255, 0.12), transparent 84%),
+        radial-gradient(520px 300px at 72% 70%, rgba(255, 90, 90, 0.1), transparent 86%),
+        radial-gradient(1200px 800px at 50% 50%, rgba(10, 14, 30, 0.9), rgba(5, 7, 16, 0.98));
+      filter: saturate(1.1);
     }
 
     canvas#stars {
@@ -84,27 +86,28 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 7px 14px;
+      padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.26);
       color: var(--muted-strong);
       font-size: 0.9rem;
       font-weight: 650;
       letter-spacing: 0.2px;
       white-space: nowrap;
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.06);
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
       gap: 24px;
       align-items: start;
     }
 
     .right-col {
       width: 100%;
-      max-width: 620px;
+      max-width: 560px;
       margin-left: auto;
     }
 
@@ -137,7 +140,7 @@
       width: 230px;
       height: 230px;
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+      background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
       border: 1px solid rgba(255,255,255,0.22);
       position: relative;
       box-shadow: var(--glow);
@@ -256,10 +259,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
-      margin-right: 6px;
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
       flex: 0 0 auto;
+      color: var(--icon-night);
     }
 
     .mini-forecast { display: grid; gap: 12px; }
@@ -277,8 +281,8 @@
       gap: 6px;
       padding: 10px 8px;
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       text-align: center;
     }
 
@@ -373,8 +377,8 @@
       border-radius: 999px;
       font-size: 0.7rem;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       color: var(--muted-strong);
       white-space: nowrap;
     }
@@ -426,15 +430,16 @@
     }
 
     .signature {
-      opacity: 0.8;
+      opacity: 0.9;
       font-weight: 600;
       letter-spacing: 0.3px;
       color: var(--muted-strong);
-      padding: 7px 14px;
+      padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.26);
       white-space: nowrap;
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.06);
     }
 
     .refresh-btn {
@@ -451,9 +456,20 @@
 
     .refresh-btn:hover { background: rgba(255,255,255,0.2); }
 
-    .data-unavailable {
-      color: #ffb2c2;
-      font-size: 0.9rem;
+    .status-card {
+      display: grid;
+      gap: 6px;
+      color: var(--muted-strong);
+    }
+
+    .status-title {
+      font-weight: 600;
+      color: #ffd1dc;
+    }
+
+    .status-details {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
     @media (max-width: 900px) {
@@ -501,8 +517,8 @@
             <div>
               <span class="moon-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M15 3a8.5 8.5 0 1 0 6 14.5A9 9 0 0 1 15 3z"
-                        stroke="var(--icon-night)" stroke-width="1.8"
+                  <path d="M15.5 3.5a8.5 8.5 0 1 0 5.8 14.6A7.4 7.4 0 0 1 15.5 3.5z"
+                        stroke="currentColor" stroke-width="1.8"
                         stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
@@ -674,7 +690,7 @@
               </span>
               Rain rate
             </div>
-            <div class="weather-value" id="rainRate">0.0 mm/h</div>
+            <div class="weather-value" id="rainRate">0.0 mm per hour</div>
           </div>
 
           <div class="card weather-card">
@@ -709,7 +725,10 @@
         </div>
 
         <div class="card" id="statusCard" style="margin-top: var(--card-gap); display:none;">
-          <div class="data-unavailable">Weather temporarily unavailable</div>
+          <div class="status-card">
+            <div class="status-title">Weather temporarily unavailable</div>
+            <div class="status-details" id="statusDetails">Trying again soon.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -740,6 +759,20 @@
 
     function formatDateLongFromParts(parts) {
       return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
+    }
+
+    function splitLocalTime(timeString) {
+      if (!timeString) return null;
+      const [, timePart] = timeString.split("T");
+      if (!timePart) return null;
+      const [hour, minute] = timePart.split(":");
+      return { hour, minute };
+    }
+
+    function formatTimeHMFromString(timeString) {
+      const parts = splitLocalTime(timeString);
+      if (!parts) return "--:--";
+      return `${parts.hour}:${parts.minute}`;
     }
 
     function getParisParts(date = new Date()) {
@@ -804,7 +837,15 @@
     }
 
     function setDataUnavailable(show) {
-      $("statusCard").style.display = show ? "block" : "none";
+      const card = $("statusCard");
+      card.style.display = show ? "block" : "none";
+
+      if (show) {
+        const lastTime = state.weather?.current?.time;
+        $("statusDetails").textContent = lastTime
+          ? `Last known update ${formatTimeHMFromString(lastTime)}.`
+          : "Trying again soon.";
+      }
     }
 
     function weatherLabel(code) {
@@ -1014,7 +1055,7 @@
         const parts = getParisParts();
         $("lastUpdated").textContent = formatTimeHMFromParts(parts);
       } catch (e) {
-        if (!state.weather) setDataUnavailable(true);
+        setDataUnavailable(true);
       }
     }
 
@@ -1062,15 +1103,15 @@
 
       const rainRateRaw = c.rain ?? c.precipitation;
       const rainRate = Number.isFinite(rainRateRaw) ? rainRateRaw : 0;
-      $("rainRate").textContent = `${rainRate.toFixed(1)} mm/h`;
+      $("rainRate").textContent = `${rainRate.toFixed(1)} mm per hour`;
 
       $("conditionText").textContent = weatherLabel(c.weather_code);
       $("conditionIcon").innerHTML = weatherIcon(c.weather_code);
 
       const sunrise = data.daily?.sunrise?.[0];
       const sunset = data.daily?.sunset?.[0];
-      $("sunrise").textContent = sunrise ? formatTimeHMFromParts(getParisParts(new Date(sunrise))) : "--:--";
-      $("sunset").textContent = sunset ? formatTimeHMFromParts(getParisParts(new Date(sunset))) : "--:--";
+      $("sunrise").textContent = sunrise ? formatTimeHMFromString(sunrise) : "--:--";
+      $("sunset").textContent = sunset ? formatTimeHMFromString(sunset) : "--:--";
 
       const windDir = Number.isFinite(c.wind_direction_10m) ? c.wind_direction_10m : null;
       updateWindDirection(windDir);
@@ -1115,7 +1156,7 @@
       const probs = data.hourly?.precipitation_probability || [];
       const codes = data.hourly?.weather_code || [];
 
-      const sunrise = data.daily?.sunrise?.[0] ? new Date(data.daily.sunrise[0]) : null;
+      const sunrise = data.daily?.sunrise?.[0] || null;
       const currentTime = data.current?.time;
 
       if (!currentTime || !times.length) return;
@@ -1126,10 +1167,8 @@
       const sliceTimes = times.slice(index, index + 6);
 
       sliceTimes.forEach((time, i) => {
-        const timeDate = new Date(time);
-        const parts = getParisParts(timeDate);
-
-        const label = i === 0 ? "Now" : `${parts.hour} h`;
+        const timeParts = splitLocalTime(time);
+        const label = i === 0 ? "Now" : (timeParts ? `${timeParts.hour}h` : "--");
 
         const temp = temps[index + i];
         const prob = probs[index + i];
@@ -1145,8 +1184,8 @@
         `;
 
         if (sunrise) {
-          const sunriseHour = getParisParts(sunrise).hour;
-          if (parts.hour === sunriseHour) {
+          const sunriseParts = splitLocalTime(sunrise);
+          if (sunriseParts && timeParts && sunriseParts.hour === timeParts.hour) {
             const marker = document.createElement("div");
             marker.className = "mini-marker";
             marker.textContent = "Sunrise";
