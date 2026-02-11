@@ -317,47 +317,6 @@
       height: 100%;
     }
 
-    .sun-moon {
-      display: grid;
-      gap: 8px;
-    }
-
-    .sun-moon-card {
-      max-width: 100%;
-      padding: 18px 20px;
-    }
-
-    .sun-moon-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.95rem;
-      color: var(--muted-strong);
-      gap: 10px;
-    }
-
-    .sun-moon-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .moon-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      margin-left: 6px;
-      flex: 0 0 auto;
-      color: var(--icon-night);
-    }
-
-    .moon-icon svg {
-      width: 18px;
-      height: 18px;
-    }
-
     .mini-forecast { display: grid; gap: 12px; }
 
     .mini-forecast-row {
@@ -702,22 +661,6 @@
       transform: translateX(-50%) rotate(45deg);
     }
 
-    .sun-progress-card {
-      display: grid;
-      gap: 12px;
-      padding: 18px 20px;
-      align-content: start;
-    }
-
-    .sun-curve {
-      width: 100%;
-      height: 52px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .sun-curve svg {
       width: 100%;
       height: 100%;
@@ -742,26 +685,6 @@
       fill: #ffd36b;
       stroke: rgba(255, 255, 255, 0.85);
       stroke-width: 2;
-    }
-
-    .sun-progress-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 6px 12px;
-      font-size: 0.78rem;
-      color: var(--muted-strong);
-    }
-
-    .sun-progress-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .sun-progress-row span:last-child {
-      color: var(--text);
-      font-weight: 600;
     }
 
     .metric-icon {
@@ -1521,6 +1444,9 @@
     </div>
   </div>
 
+  <!-- SunCalc required for sunrise, moon, illumination -->
+  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+
   <script>
     let CITY = "Toulon";
     let COUNTRY = "France";
@@ -1539,6 +1465,18 @@
     };
 
     const $ = (id) => document.getElementById(id);
+
+    function showStatus(details = "") {
+      const card = $("statusCard");
+      const text = $("statusDetails");
+      if (text) text.textContent = details || "";
+      if (card) card.style.display = "block";
+    }
+
+    function hideStatus() {
+      const card = $("statusCard");
+      if (card) card.style.display = "none";
+    }
 
     function formatValue(value, formatter, fallback = "—") {
       if (!Number.isFinite(value)) return fallback;
@@ -1594,7 +1532,6 @@
     function formatRainRate(value) {
       if (!Number.isFinite(value)) return "—";
       if (value <= 0) return "0 mm/h";
-      if (value < 1) return `${value.toFixed(1)} mm/h`;
       if (value < 10) return `${value.toFixed(1)} mm/h`;
       return `${Math.round(value)} mm/h`;
     }
@@ -1687,6 +1624,32 @@
       clock.appendChild(fragment);
     }
 
+    function formatHourMinute(hour, minute) {
+      if (hour == null || minute == null) return "—";
+      const safeHour = String(Number(hour));
+      const safeMinute = String(minute).padStart(2, "0");
+      return `${safeHour}h${safeMinute}`;
+    }
+
+    function formatDateLongFromParts(parts) {
+      return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
+    }
+
+    function getTimePartsFromDate(date) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
+      const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: TZ,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+      const parts = formatter.formatToParts(date).reduce((acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      }, {});
+      return { hour: parts.hour, minute: parts.minute };
+    }
+
     function updateClock() {
       const now = new Date();
       const timeParts = new Intl.DateTimeFormat("en-GB", {
@@ -1741,37 +1704,6 @@
       }
     }
 
-    function formatHourMinute(hour, minute) {
-      if (hour == null || minute == null) return "—";
-      const safeHour = String(Number(hour));
-      const safeMinute = String(minute).padStart(2, "0");
-      return `${safeHour}h${safeMinute}`;
-    }
-
-    function formatTimeHMFromParts(parts) {
-      if (!parts?.hour || !parts?.minute) return "—";
-      return formatHourMinute(parts.hour, parts.minute);
-    }
-
-    function formatDateLongFromParts(parts) {
-      return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
-    }
-
-    function getTimePartsFromDate(date) {
-      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: TZ,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-      const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-      return { hour: parts.hour, minute: parts.minute };
-    }
-
     function splitLocalTime(timeValue) {
       if (!timeValue) return null;
       if (timeValue instanceof Date) return getTimePartsFromDate(timeValue);
@@ -1779,12 +1711,6 @@
       if (!timePart) return null;
       const [hour, minute] = timePart.split(":");
       return { hour, minute };
-    }
-
-    function formatTimeHMFromString(timeString) {
-      const parts = splitLocalTime(timeString);
-      if (!parts) return "—";
-      return formatHourMinute(parts.hour, parts.minute);
     }
 
     function formatTimeHMFromDate(date) {
@@ -1821,41 +1747,6 @@
       return `${hour12}<span class="ampm">${suffix}</span>`;
     }
 
-    function getLocalParts(date = new Date()) {
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: TZ,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        fractionalSecondDigits: 3,
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
-        hour12: false
-      });
-
-      const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-
-      return parts;
-    }
-
-    function getLocalDateObject(parts) {
-      if (!parts) return new Date();
-      const monthIndex = new Date(`${parts.month} 1, 2000`).getMonth();
-      return new Date(Date.UTC(
-        Number(parts.year),
-        monthIndex,
-        Number(parts.day),
-        Number(parts.hour),
-        Number(parts.minute),
-        Number(parts.second)
-      ));
-    }
-
     function updateLocationDisplay() {
       const isFallback = !CITY || CITY === "Near you";
       const safeCity = isFallback ? "Toulon" : CITY;
@@ -1864,81 +1755,70 @@
       document.querySelector(".title").textContent = label;
       document.title = `${safeCity} — Clock & Weather`;
     }
+
     function initLocation() {
       TZ = "Europe/Paris";
       CITY = "Toulon";
       COUNTRY = "France";
       LAT = 43.12442;
       LON = 5.92836;
-
       updateLocationDisplay();
-    }
-
-    function loadWeather() {
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,pressure_msl,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m,visibility,dew_point_2m,uv_index,is_day,rain&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&daily=sunrise,sunset&forecast_days=2`;
-      setSectionLoading("weather", true);
-
-      fetch(weatherUrl)
-        .then((res) => res.ok ? res.json() : Promise.reject(res))
-        .then((data) => {
-          state.weather = normalizeWeather(data);
-          renderWeather(state.weather);
-          updateLastUpdated();
-          setSectionLoading("weather", false);
-          triggerSectionFade("weather");
-        })
-        .catch((err) => {
-          console.error("Weather fetch failed", err);
-          if (!state.weather) {
-            state.weather = buildDemoWeather();
-            renderWeather(state.weather);
-          }
-          setSectionLoading("weather", false);
-          triggerSectionFade("weather");
-        });
-    }
-
-    function loadAirQuality() {
-      const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=us_aqi`;
-      setSectionLoading("air", true);
-
-      fetch(airUrl)
-        .then((res) => res.ok ? res.json() : Promise.reject(res))
-        .then((data) => {
-          state.air = data;
-          renderAirQuality(state.air);
-          setSectionLoading("air", false);
-          triggerSectionFade("air");
-        })
-        .catch((err) => {
-          console.error("Air quality fetch failed", err);
-          if (!state.air) state.air = buildDemoAirQuality();
-          renderAirQuality(state.air);
-          setSectionLoading("air", false);
-          triggerSectionFade("air");
-        });
-    }
-
-    function normalizeWeather(data) {
-      if (!data || !data.current) return buildDemoWeather();
-
-      const current = { ...data.current };
-      current.time = new Date(current.time);
-
-      const hourly = { ...data.hourly };
-      hourly.time = (hourly.time || []).map((t) => new Date(t));
-
-      const daily = { ...data.daily };
-      daily.sunrise = (daily.sunrise || []).map((t) => new Date(t));
-      daily.sunset = (daily.sunset || []).map((t) => new Date(t));
-
-      return { current, hourly, daily };
     }
 
     function updateLastUpdated() {
       const now = new Date();
       const parts = getTimePartsFromDate(now);
-      setText("lastUpdated", formatTimeHMFromParts(parts));
+      if (!parts) return;
+      setText("lastUpdated", formatHourMinute(parts.hour, parts.minute));
+    }
+
+    function weatherLabel(code) {
+      const map = {
+        0: "Clear sky",
+        1: "Mainly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Rime fog",
+        51: "Light drizzle",
+        53: "Moderate drizzle",
+        55: "Dense drizzle",
+        56: "Freezing drizzle",
+        57: "Dense freezing drizzle",
+        61: "Slight rain",
+        63: "Moderate rain",
+        65: "Heavy rain",
+        66: "Freezing rain",
+        67: "Heavy freezing rain",
+        71: "Slight snow",
+        73: "Moderate snow",
+        75: "Heavy snow",
+        77: "Snow grains",
+        80: "Rain showers",
+        81: "Moderate showers",
+        82: "Violent showers",
+        85: "Snow showers",
+        86: "Heavy snow showers",
+        95: "Thunderstorm",
+        96: "Thunderstorm with hail",
+        99: "Thunderstorm with heavy hail"
+      };
+      return map[code] ?? "Weather";
+    }
+
+    function moonPhaseName(date) {
+      if (!(date instanceof Date)) return "—";
+      const phase = SunCalc.getMoonIllumination(date).phase;
+      const p = (phase + 1) % 1;
+
+      if (p < 0.0625 || p >= 0.9375) return "New Moon";
+      if (p < 0.1875) return "Waxing Crescent";
+      if (p < 0.3125) return "First Quarter";
+      if (p < 0.4375) return "Waxing Gibbous";
+      if (p < 0.5625) return "Full Moon";
+      if (p < 0.6875) return "Waning Gibbous";
+      if (p < 0.8125) return "Last Quarter";
+      return "Waning Crescent";
     }
 
     function weatherIcon(code) {
@@ -1975,7 +1855,7 @@
         </svg>`;
       }
 
-      if ((code >= 51 && code <= 57) || (code >= 61 && code <= 67)) {
+      if ((code >= 51 && code <= 57) || (code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 36h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 36z" />
           <path d="M22 44l-4 8M32 44l-4 8M42 44l-4 8" stroke="${rain}" />
@@ -2001,34 +1881,20 @@
       </svg>`;
     }
 
-    function setSparklineGradient(svgId, gradientId, colors) {
-      const svg = document.querySelector(svgId);
-      if (!svg) return;
+    function normalizeWeather(data) {
+      if (!data || !data.current) return buildDemoWeather();
 
-      let defs = svg.querySelector("defs");
-      if (!defs) {
-        defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        svg.prepend(defs);
-      }
+      const current = { ...data.current };
+      current.time = new Date(current.time);
 
-      let gradient = svg.querySelector(`#${gradientId}`);
-      if (!gradient) {
-        gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-        gradient.setAttribute("id", gradientId);
-        gradient.setAttribute("x1", "0");
-        gradient.setAttribute("x2", "300");
-        gradient.setAttribute("y1", "0");
-        gradient.setAttribute("y2", "0");
-        defs.appendChild(gradient);
-      }
+      const hourly = { ...data.hourly };
+      hourly.time = (hourly.time || []).map((t) => new Date(t));
 
-      gradient.innerHTML = "";
-      colors.forEach(({ offset, color }) => {
-        const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        stop.setAttribute("offset", offset);
-        stop.setAttribute("stop-color", color);
-        gradient.appendChild(stop);
-      });
+      const daily = { ...data.daily };
+      daily.sunrise = (daily.sunrise || []).map((t) => new Date(t));
+      daily.sunset = (daily.sunset || []).map((t) => new Date(t));
+
+      return { current, hourly, daily };
     }
 
     function buildDemoWeather() {
@@ -2388,8 +2254,7 @@
         : "—";
       setText("moonDistance", distanceLabel);
 
-      const phaseName = moonPhaseName(now);
-      setText("moonPhaseLabel", phaseName);
+      setText("moonPhaseLabel", moonPhaseName(now));
 
       let bestDate = null;
       let bestDelta = Infinity;
@@ -2451,13 +2316,15 @@
       const uvValue = Number(current.uv_index);
       const gustValue = Number(current.wind_gusts_10m);
 
-      uvAlert.classList.toggle("hidden", !(uvValue > 6));
-      gustAlert.classList.toggle("hidden", !(gustValue > 40));
+      if (uvAlert) uvAlert.classList.toggle("hidden", !(uvValue > 6));
+      if (gustAlert) gustAlert.classList.toggle("hidden", !(gustValue > 40));
 
-      if (state.air?.current?.us_aqi != null) {
-        aqiAlert.classList.toggle("hidden", !(Number(state.air.current.us_aqi) > 100));
-      } else {
-        aqiAlert.classList.add("hidden");
+      if (aqiAlert) {
+        if (state.air?.current?.us_aqi != null) {
+          aqiAlert.classList.toggle("hidden", !(Number(state.air.current.us_aqi) > 100));
+        } else {
+          aqiAlert.classList.add("hidden");
+        }
       }
     }
 
@@ -2473,18 +2340,20 @@
       const compassNeedle = $("windCompassNeedle");
       if (!Number.isFinite(deg)) {
         setText("windDir", "—");
-        arrow.style.transform = "rotate(0deg)";
+        if (arrow) arrow.style.transform = "rotate(0deg)";
         if (compassNeedle) compassNeedle.style.transform = "rotate(0deg)";
         return;
       }
-      arrow.style.transform = `rotate(${deg}deg)`;
+      if (arrow) arrow.style.transform = `rotate(${deg}deg)`;
       if (compassNeedle) compassNeedle.style.transform = `rotate(${deg}deg)`;
       setText("windDir", `${degToCompass(deg)} • ${Math.round(deg)}°`);
     }
 
     function initStars() {
       const canvas = $("stars");
+      if (!canvas) return;
       const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
       let w, h;
       const starColors = [
@@ -2528,6 +2397,69 @@
       draw();
     }
 
+    function loadWeather() {
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,pressure_msl,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m,visibility,dew_point_2m,uv_index,is_day,rain&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&daily=sunrise,sunset&forecast_days=2`;
+      setSectionLoading("weather", true);
+
+      fetch(weatherUrl)
+        .then((res) => res.ok ? res.json() : Promise.reject(res))
+        .then((data) => {
+          try {
+            state.weather = normalizeWeather(data);
+            renderWeather(state.weather);
+            hideStatus();
+          } catch (e) {
+            console.error("Weather render failed", e);
+            showStatus(String(e?.message || e || "Render error"));
+          }
+          updateLastUpdated();
+        })
+        .catch((err) => {
+          console.error("Weather fetch failed", err);
+          try {
+            if (!state.weather) state.weather = buildDemoWeather();
+            renderWeather(state.weather);
+            showStatus("Live weather fetch failed, showing demo data");
+          } catch (e) {
+            console.error("Demo render failed", e);
+            showStatus(String(e?.message || e || "Demo render error"));
+          }
+        })
+        .finally(() => {
+          setSectionLoading("weather", false);
+          triggerSectionFade("weather");
+        });
+    }
+
+    function loadAirQuality() {
+      const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=us_aqi`;
+      setSectionLoading("air", true);
+
+      fetch(airUrl)
+        .then((res) => res.ok ? res.json() : Promise.reject(res))
+        .then((data) => {
+          try {
+            state.air = data;
+            renderAirQuality(state.air);
+          } catch (e) {
+            console.error("Air render failed", e);
+          }
+        })
+        .catch((err) => {
+          console.error("Air quality fetch failed", err);
+          if (!state.air) state.air = buildDemoAirQuality();
+          try {
+            renderAirQuality(state.air);
+          } catch (e) {
+            console.error("Demo air render failed", e);
+          }
+        })
+        .finally(() => {
+          setSectionLoading("air", false);
+          triggerSectionFade("air");
+        });
+    }
+
     function init() {
       initLocation();
       buildClockFace();
@@ -2540,10 +2472,13 @@
       setInterval(loadWeather, REFRESH_MS);
       setInterval(loadAirQuality, REFRESH_MS);
 
-      $("refreshBtn").addEventListener("click", () => {
-        loadWeather();
-        loadAirQuality();
-      });
+      const refresh = $("refreshBtn");
+      if (refresh) {
+        refresh.addEventListener("click", () => {
+          loadWeather();
+          loadAirQuality();
+        });
+      }
 
       initStars();
 
