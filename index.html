@@ -273,7 +273,7 @@
     }
 
     .clock-number.six {
-      transform: translate(-50%, -50%) translateX(-8px);
+      transform: translate(-50%, -50%) translateX(-4px);
     }
 
     .digital { text-align: center; }
@@ -435,59 +435,10 @@
       gap: var(--card-gap);
     }
 
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--card-gap);
-      align-items: stretch;
-    }
-
-    .bottom-grid .card {
-      height: 100%;
-    }
-
     .weather-card {
       display: grid;
       gap: 6px;
       align-content: center;
-    }
-
-    .summary-content {
-      display: grid;
-      gap: 8px;
-    }
-
-    .summary-timeline {
-      display: grid;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .summary-timeline-line {
-      height: 1px;
-      background-color: rgba(255, 255, 255, 0.18);
-      position: relative;
-      border-radius: 999px;
-      margin: 0 4px;
-      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.45) 1px, transparent 1px);
-      background-size: calc(100% / 8) 100%;
-      background-repeat: repeat-x;
-    }
-
-    .summary-timeline-labels {
-      display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-      font-size: 0.68rem;
-      color: var(--muted-strong);
-      letter-spacing: 0.2px;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 600px) {
-      .summary-timeline-labels {
-        font-size: 0.62rem;
-      }
     }
 
     .weather-title {
@@ -1096,23 +1047,10 @@
             <span class="skeleton-line w-50"></span>
             <span class="skeleton-line w-70"></span>
           </div>
-          <div class="card-content summary-content">
+          <div class="card-content">
             <div class="weather-title">Today summary</div>
             <div class="weather-value" id="summaryTemp">—</div>
             <div class="weather-subtitle">Dew point <span id="dewPoint">—</span></div>
-            <div class="summary-timeline" aria-hidden="true">
-              <div class="summary-timeline-line"></div>
-              <div class="summary-timeline-labels">
-                <span>3AM</span>
-                <span>6AM</span>
-                <span>9AM</span>
-                <span>12PM</span>
-                <span>3PM</span>
-                <span>6PM</span>
-                <span>9PM</span>
-                <span>12AM</span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -1762,242 +1700,370 @@
       COUNTRY = "France";
       LAT = 43.12442;
       LON = 5.92836;
-
       updateLocationDisplay();
     }
 
-    function loadWeather() {
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,pressure_msl,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m,visibility,dew_point_2m,uv_index,is_day,rain&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&daily=sunrise,sunset&forecast_days=2`;
-      setSectionLoading("weather", true);
-
-      fetch(weatherUrl)
-        .then((res) => res.ok ? res.json() : Promise.reject(res))
-        .then((data) => {
-          state.weather = normalizeWeather(data);
-          renderWeather(state.weather);
-          updateLastUpdated();
-          setSectionLoading("weather", false);
-          triggerSectionFade("weather");
-        })
-        .catch((err) => {
-          console.error("Weather fetch failed", err);
-          if (!state.weather) {
-            state.weather = buildDemoWeather();
-            renderWeather(state.weather);
-          }
-          setSectionLoading("weather", false);
-          triggerSectionFade("weather");
-        });
-    }
-
-    function loadAirQuality() {
-      const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=us_aqi`;
-      setSectionLoading("air", true);
-
-      fetch(airUrl)
-        .then((res) => res.ok ? res.json() : Promise.reject(res))
-        .then((data) => {
-          state.air = data;
-          renderAirQuality(state.air);
-          setSectionLoading("air", false);
-          triggerSectionFade("air");
-        })
-        .catch((err) => {
-          console.error("Air quality fetch failed", err);
-          if (!state.air) state.air = buildDemoAirQuality();
-          renderAirQuality(state.air);
-          setSectionLoading("air", false);
-          triggerSectionFade("air");
-        });
-    }
-
-    function normalizeWeather(data) {
-      if (!data || !data.current) return buildDemoWeather();
-
-      const current = { ...data.current };
-      current.time = new Date(current.time);
-
-      const hourly = { ...data.hourly };
-      hourly.time = (hourly.time || []).map((t) => new Date(t));
-
-      const daily = { ...data.daily };
-      daily.sunrise = (daily.sunrise || []).map((t) => new Date(t));
-      daily.sunset = (daily.sunset || []).map((t) => new Date(t));
-
-      return { current, hourly, daily };
-    }
-
-    function updateLastUpdated() {
-      const now = new Date();
-      const parts = getTimePartsFromDate(now);
-      setText("lastUpdated", formatTimeHMFromParts(parts));
+    function weatherLabel(code) {
+      const map = {
+        0: "Clear",
+        1: "Mainly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Depositing rime fog",
+        51: "Light drizzle",
+        53: "Drizzle",
+        55: "Dense drizzle",
+        61: "Light rain",
+        63: "Rain",
+        65: "Heavy rain",
+        66: "Freezing rain",
+        67: "Heavy freezing rain",
+        71: "Snow fall",
+        73: "Snow fall",
+        75: "Heavy snow",
+        77: "Snow grains",
+        80: "Light rain showers",
+        81: "Rain showers",
+        82: "Heavy rain showers",
+        85: "Snow showers",
+        86: "Heavy snow showers",
+        95: "Thunderstorm",
+        96: "Thunderstorm with hail",
+        99: "Thunderstorm with heavy hail"
+      };
+      return map[code] || "Unknown";
     }
 
     function weatherIcon(code) {
-      const cloud = "#c7d1e2";
-      const rain = "#86dcff";
+      const stroke = "#d8dee9";
+      const strokeSoft = "#c7cfdd";
       const sun = "#ffd36b";
+      const rain = "#7bdcff";
       const night = "#bda8ff";
 
-      if (code === 0) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${sun}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="32" cy="32" r="10" />
-          <path d="M32 8v6M32 50v6M8 32h6M50 32h6M14.5 14.5l4 4M45.5 45.5l4 4M14.5 49.5l4-4M45.5 18.5l4-4" />
+      if ([0, 1].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="32" cy="32" r="10" stroke="${sun}" />
+          <path d="M32 6v8M32 50v8M6 32h8M50 32h8M14 14l6 6M44 44l6 6M14 50l6-6M44 20l6-6" stroke="${sun}" />
         </svg>`;
       }
 
-      if (code === 1 || code === 2) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 40h26a10 10 0 0 0 0-20 16 16 0 0 0-31.1 4A8 8 0 0 0 20 40z" />
+      if ([2].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="22" cy="22" r="8" stroke="${sun}" />
+          <path d="M18 42h26a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 18 42z" />
         </svg>`;
       }
 
-      if (code === 3) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 40h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 40z" />
-          <path d="M20 45h26" />
+      if ([3].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 40h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 40z" />
         </svg>`;
       }
 
-      if (code >= 45 && code <= 48) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 40h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 40z" />
-          <path d="M24 48h16" stroke="${rain}" />
-          <path d="M20 52h24" stroke="${rain}" />
+      if ([45, 48].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round">
+          <path d="M12 26h40" />
+          <path d="M8 36h48" />
+          <path d="M16 46h32" />
         </svg>`;
       }
 
-      if ((code >= 51 && code <= 57) || (code >= 61 && code <= 67)) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 36h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 36z" />
-          <path d="M22 44l-4 8M32 44l-4 8M42 44l-4 8" stroke="${rain}" />
+      if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
+          <path d="M22 42l-4 8" stroke="${rain}" />
+          <path d="M34 42l-4 8" stroke="${rain}" />
+          <path d="M46 42l-4 8" stroke="${rain}" />
         </svg>`;
       }
 
-      if (code >= 71 && code <= 77) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 36h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 36z" />
-          <circle cx="24" cy="48" r="3" stroke="${rain}" />
-          <circle cx="34" cy="52" r="3" stroke="${rain}" />
-          <circle cx="44" cy="48" r="3" stroke="${rain}" />
+      if ([71, 73, 75, 77, 85, 86].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
+          <circle cx="22" cy="44" r="2" />
+          <circle cx="34" cy="46" r="2" />
+          <circle cx="46" cy="44" r="2" />
         </svg>`;
       }
 
-      if (code >= 80 && code <= 82) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 34h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 34z" />
-          <path d="M22 40l-5 9M32 40l-5 9M42 40l-5 9" stroke="${rain}" />
+      if ([95, 96, 99].includes(code)) {
+        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${strokeSoft}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 34h30a10 10 0 0 0 0-20 14 14 0 0 0-27-2A10 10 0 0 0 16 34z" />
+          <path d="M28 42l-4 8" stroke="${rain}" />
+          <path d="M40 42l-4 8" stroke="${rain}" />
+          <path d="M30 34l-4 8" stroke="${sun}" />
+          <path d="M40 34l-4 8" stroke="${sun}" />
         </svg>`;
       }
 
-      if (code >= 95) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 36h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 36z" />
-          <path d="M28 44l-4 10M40 44l-6 10" stroke="${rain}" />
-          <path d="M28 48h8" stroke="${sun}" />
-        </svg>`;
-      }
-
-      if (code === 0 && new Date().getHours() >= 19) {
-        return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${night}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M38 12a16 16 0 1 0 12 28A14 14 0 0 1 38 12z" />
-        </svg>`;
-      }
-
-      return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 40h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 40z" />
+      return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${night}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M38 12a16 16 0 1 0 12 28A14 14 0 0 1 38 12z" />
       </svg>`;
     }
 
-    function weatherLabel(code) {
-      if (code === 0) return "Clear";
-      if (code === 1) return "Mostly clear";
-      if (code === 2) return "Partly cloudy";
-      if (code === 3) return "Overcast";
-      if (code >= 45 && code <= 48) return "Fog";
-      if (code >= 51 && code <= 57) return "Drizzle";
-      if (code >= 61 && code <= 67) return "Rain";
-      if (code >= 71 && code <= 77) return "Snow";
-      if (code >= 80 && code <= 82) return "Showers";
-      if (code >= 95) return "Thunderstorm";
-      return "—";
+    function moonPhaseName(date) {
+      const lp = 2551443;
+      const newMoon = new Date("2001-01-24T13:35:00Z").getTime() / 1000;
+      const now = date.getTime() / 1000;
+      const phase = ((now - newMoon) % lp) / lp;
+
+      if (phase < 0.03 || phase > 0.97) return "New Moon";
+      if (phase < 0.22) return "Waxing Crescent";
+      if (phase < 0.28) return "First Quarter";
+      if (phase < 0.47) return "Waxing Gibbous";
+      if (phase < 0.53) return "Full Moon";
+      if (phase < 0.72) return "Waning Gibbous";
+      if (phase < 0.78) return "Last Quarter";
+      return "Waning Crescent";
+    }
+
+    function buildClockFace() {
+      const clock = $("analogClock");
+      const size = clock.clientWidth || 230;
+      const center = size / 2;
+
+      clock.innerHTML = "";
+
+      for (let i = 0; i < 60; i++) {
+        const t = document.createElement("div");
+        t.className = "tick" + (i % 5 === 0 ? " major" : "");
+        t.style.transform = `rotate(${i * 6}deg) translateX(-50%)`;
+        t.style.transformOrigin = `50% ${center - 5}px`;
+        clock.appendChild(t);
+      }
+
+      const numbers = [
+        { text: "12", angle: 0 },
+        { text: "3", angle: 90 },
+        { text: "6", angle: 180 },
+        { text: "9", angle: 270 }
+      ];
+
+      numbers.forEach(({ text, angle }) => {
+        const num = document.createElement("div");
+        num.className = `clock-number${text === "6" ? " six" : ""}`;
+
+        const radius = center - Math.max(26, size * 0.16);
+        const rad = (angle - 90) * (Math.PI / 180);
+        const x = center + radius * Math.cos(rad);
+        const y = center + radius * Math.sin(rad);
+
+        num.style.left = `${x}px`;
+        num.style.top = `${y}px`;
+        num.textContent = text;
+
+        clock.appendChild(num);
+      });
+
+      const hour = document.createElement("div");
+      hour.className = "hand hour";
+
+      const minute = document.createElement("div");
+      minute.className = "hand minute";
+
+      const second = document.createElement("div");
+      second.className = "hand second";
+
+      const dot = document.createElement("div");
+      dot.className = "center-dot";
+
+      clock.appendChild(hour);
+      clock.appendChild(minute);
+      clock.appendChild(second);
+      clock.appendChild(dot);
+    }
+
+    function updateClock() {
+      const parts = getLocalParts();
+
+      $("hh").textContent = parts.hour;
+      $("mm").textContent = parts.minute;
+      $("ss").textContent = parts.second;
+      $("dateString").textContent = formatDateLongFromParts(parts);
+
+      const hour = Number(parts.hour);
+      const minute = Number(parts.minute);
+      const second = Number(parts.second);
+      const milli = Number(parts.fractionalSecond || 0);
+
+      const secFloat = second + milli / 1000;
+      const hourDeg = (hour % 12) * 30 + minute * 0.5 + secFloat / 120;
+      const minDeg = minute * 6 + secFloat * 0.1;
+      const secDeg = secFloat * 6;
+
+      const hands = document.querySelectorAll(".hand");
+      hands[0].style.transform = `rotate(${hourDeg - 90}deg)`;
+      hands[1].style.transform = `rotate(${minDeg - 90}deg)`;
+      hands[2].style.transform = `rotate(${secDeg - 90}deg)`;
+
+      const localDate = getLocalDateObject(parts);
+      setText("moonPhaseLabel", moonPhaseName(localDate));
+    }
+
+    async function loadWeather() {
+      if (!state.weather) setSectionLoading("weather", true);
+      let data;
+
+      try {
+        const params = new URLSearchParams({
+          latitude: LAT,
+          longitude: LON,
+          timezone: TZ,
+          current: [
+            "temperature_2m",
+            "apparent_temperature",
+            "relative_humidity_2m",
+            "dew_point_2m",
+            "pressure_msl",
+            "wind_speed_10m",
+            "wind_gusts_10m",
+            "wind_direction_10m",
+            "cloud_cover",
+            "visibility",
+            "precipitation",
+            "precipitation_probability",
+            "weather_code",
+            "uv_index",
+            "is_day",
+            "rain"
+          ].join(","),
+          hourly: [
+            "temperature_2m",
+            "precipitation_probability",
+            "precipitation",
+            "weather_code"
+          ].join(","),
+          daily: ["sunrise", "sunset"].join(",")
+        });
+
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
+        if (!response.ok) throw new Error("Weather fetch failed");
+        const json = await response.json();
+
+        const current = json.current || {};
+        data = {
+          current: {
+            ...current,
+            time: current.time ? new Date(current.time) : new Date()
+          },
+          hourly: {
+            time: json.hourly?.time || [],
+            temperature_2m: json.hourly?.temperature_2m || [],
+            precipitation_probability: json.hourly?.precipitation_probability || [],
+            precipitation: json.hourly?.precipitation || [],
+            weather_code: json.hourly?.weather_code || []
+          },
+          daily: {
+            sunrise: (json.daily?.sunrise || []).map((t) => new Date(t)),
+            sunset: (json.daily?.sunset || []).map((t) => new Date(t))
+          }
+        };
+      } catch (error) {
+        data = buildDemoWeather();
+      }
+
+      state.weather = data;
+      renderWeather(data);
+      setSectionLoading("weather", false);
+      triggerSectionFade("weather");
+
+      const parts = getLocalParts();
+      setText("lastUpdated", formatTimeHMFromParts(parts));
+    }
+
+    async function loadAirQuality() {
+      if (!state.air) setSectionLoading("air", true);
+      let data;
+
+      try {
+        const params = new URLSearchParams({
+          latitude: LAT,
+          longitude: LON,
+          timezone: TZ,
+          current: "us_aqi"
+        });
+        const response = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?${params.toString()}`);
+        if (!response.ok) throw new Error("Air quality fetch failed");
+        const json = await response.json();
+        data = {
+          current: {
+            us_aqi: json.current?.us_aqi ?? null
+          }
+        };
+      } catch (error) {
+        data = buildDemoAirQuality();
+      }
+
+      state.air = data;
+      renderAirQuality(data);
+      setSectionLoading("air", false);
+      triggerSectionFade("air");
     }
 
     const SunCalc = (() => {
-      const rad = Math.PI / 180;
+      const PI = Math.PI;
+      const rad = PI / 180;
       const dayMs = 1000 * 60 * 60 * 24;
       const J1970 = 2440588;
       const J2000 = 2451545;
       const e = rad * 23.4397;
 
-      function toJulian(date) {
-        return date.valueOf() / dayMs - 0.5 + J1970;
-      }
+      const toJulian = (date) => date.valueOf() / dayMs - 0.5 + J1970;
+      const fromJulian = (j) => new Date((j + 0.5 - J1970) * dayMs);
+      const toDays = (date) => toJulian(date) - J2000;
 
-      function fromJulian(j) {
-        return new Date((j + 0.5 - J1970) * dayMs);
-      }
+      const rightAscension = (l, b) => Math.atan2(Math.sin(l) * Math.cos(e) - Math.tan(b) * Math.sin(e), Math.cos(l));
+      const declination = (l, b) => Math.asin(Math.sin(b) * Math.cos(e) + Math.cos(b) * Math.sin(e) * Math.sin(l));
+      const azimuth = (H, phi, dec) => Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi));
+      const altitude = (H, phi, dec) => Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H));
+      const siderealTime = (d, lw) => rad * (280.16 + 360.9856235 * d) - lw;
+      const astroRefraction = (h) => {
+        if (h < 0) h = 0;
+        return 0.0002967 / Math.tan(h + 0.00312536 / (h + 0.08901179));
+      };
 
-      function toDays(date) {
-        return toJulian(date) - J2000;
-      }
-
-      function rightAscension(l, b) {
-        return Math.atan2(Math.sin(l) * Math.cos(e) - Math.tan(b) * Math.sin(e), Math.cos(l));
-      }
-
-      function declination(l, b) {
-        return Math.asin(Math.sin(b) * Math.cos(e) + Math.cos(b) * Math.sin(e) * Math.sin(l));
-      }
-
-      function azimuth(H, phi, dec) {
-        return Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi));
-      }
-
-      function altitude(H, phi, dec) {
-        return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H));
-      }
-
-      function siderealTime(d, lw) {
-        return rad * (280.16 + 360.9856235 * d) - lw;
-      }
-
-      function solarMeanAnomaly(d) {
-        return rad * (357.5291 + 0.98560028 * d);
-      }
-
-      function eclipticLongitude(M) {
+      const solarMeanAnomaly = (d) => rad * (357.5291 + 0.98560028 * d);
+      const eclipticLongitude = (M) => {
         const C = rad * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M));
         const P = rad * 102.9372;
-        return M + C + P + Math.PI;
-      }
+        return M + C + P + PI;
+      };
 
-      function sunCoords(d) {
+      const sunCoords = (d) => {
         const M = solarMeanAnomaly(d);
         const L = eclipticLongitude(M);
         return {
           dec: declination(L, 0),
           ra: rightAscension(L, 0)
         };
-      }
+      };
 
-      function getTimes(date, lat, lng) {
+      const julianCycle = (d, lw) => Math.round(d - 0.0009 - lw / (2 * PI));
+      const approxTransit = (Ht, lw, n) => 0.0009 + (Ht + lw) / (2 * PI) + n;
+      const solarTransitJ = (ds, M, L) => J2000 + ds + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
+      const hourAngle = (h, phi, d) => Math.acos((Math.sin(h) - Math.sin(phi) * Math.sin(d)) / (Math.cos(phi) * Math.cos(d)));
+      const observerAngle = (height) => -2.076 * Math.sqrt(height) / 60;
+      const getSetJ = (h, lw, phi, dec, n, M, L) => {
+        const w = hourAngle(h, phi, dec);
+        const a = approxTransit(w, lw, n);
+        return solarTransitJ(a, M, L);
+      };
+
+      function getTimes(date, lat, lng, height = 0) {
         const lw = rad * -lng;
         const phi = rad * lat;
+        const dh = observerAngle(height);
         const d = toDays(date);
-
-        const n = Math.round(d - 0.0009 - lw / (2 * Math.PI));
-        const ds = n + 0.0009 + lw / (2 * Math.PI);
+        const n = julianCycle(d, lw);
+        const ds = approxTransit(0, lw, n);
         const M = solarMeanAnomaly(ds);
         const L = eclipticLongitude(M);
         const dec = declination(L, 0);
-
-        const Jnoon = J2000 + ds + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
-
-        const h0 = -0.833 * rad;
-        const w0 = Math.acos((Math.sin(h0) - Math.sin(phi) * Math.sin(dec)) / (Math.cos(phi) * Math.cos(dec)));
-        const Jrise = Jnoon - w0 / (2 * Math.PI);
-        const Jset = Jnoon + w0 / (2 * Math.PI);
+        const Jnoon = solarTransitJ(ds, M, L);
+        const Jset = getSetJ(-0.833 * rad + dh, lw, phi, dec, n, M, L);
+        const Jrise = Jnoon - (Jset - Jnoon);
 
         return {
           sunrise: fromJulian(Jrise),
@@ -2005,42 +2071,49 @@
         };
       }
 
-      function getMoonPosition(date, lat, lng) {
-        const d = toDays(date);
+      const moonCoords = (d) => {
         const L = rad * (218.316 + 13.176396 * d);
         const M = rad * (134.963 + 13.064993 * d);
-        const F = rad * (93.272 + 13.229350 * d);
-
+        const F = rad * (93.272 + 13.22935 * d);
         const l = L + rad * 6.289 * Math.sin(M);
         const b = rad * 5.128 * Math.sin(F);
         const dt = 385001 - 20905 * Math.cos(M);
+        return {
+          ra: rightAscension(l, b),
+          dec: declination(l, b),
+          dist: dt
+        };
+      };
 
-        const ra = rightAscension(l, b);
-        const dec = declination(l, b);
-
+      function getMoonPosition(date, lat, lng) {
         const lw = rad * -lng;
         const phi = rad * lat;
-        const H = siderealTime(d, lw) - ra;
-
+        const d = toDays(date);
+        const c = moonCoords(d);
+        const H = siderealTime(d, lw) - c.ra;
+        let h = altitude(H, phi, c.dec);
+        h = h + astroRefraction(h);
         return {
-          azimuth: azimuth(H, phi, dec),
-          altitude: altitude(H, phi, dec),
-          distance: dt
+          azimuth: azimuth(H, phi, c.dec),
+          altitude: h,
+          distance: c.dist
         };
       }
 
       function getMoonIllumination(date) {
         const d = toDays(date);
         const s = sunCoords(d);
-
-        const phi = Math.acos(Math.sin(s.dec) * Math.sin(declination(0, 0)) + Math.cos(s.dec) * Math.cos(declination(0, 0)) * Math.cos(s.ra - rightAscension(0, 0)));
-        const inc = Math.atan2(149598000 * Math.sin(phi), 385001 - 149598000 * Math.cos(phi));
-        const angle = Math.atan2(Math.cos(s.dec) * Math.sin(s.ra - rightAscension(0, 0)), Math.sin(s.dec) * Math.cos(declination(0, 0)) - Math.cos(s.dec) * Math.sin(declination(0, 0)) * Math.cos(s.ra - rightAscension(0, 0)));
-
+        const m = moonCoords(d);
+        const sdist = 149598000;
+        const phi = Math.acos(Math.sin(s.dec) * Math.sin(m.dec) + Math.cos(s.dec) * Math.cos(m.dec) * Math.cos(s.ra - m.ra));
+        const inc = Math.atan2(sdist * Math.sin(phi), m.dist - sdist * Math.cos(phi));
+        const angle = Math.atan2(
+          Math.cos(s.dec) * Math.sin(s.ra - m.ra),
+          Math.sin(s.dec) * Math.cos(m.dec) - Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra)
+        );
         return {
           fraction: (1 + Math.cos(inc)) / 2,
-          phase: 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI,
-          angle
+          phase: 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / PI
         };
       }
 
