@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Toulon — Clock & Weather</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --glass: rgba(16, 22, 40, 0.76);
@@ -112,6 +114,7 @@
       width: 16px;
       height: 16px;
       color: var(--accent-strong);
+      display: block;
     }
 
     .last-updated span {
@@ -272,10 +275,6 @@
       text-shadow: 0 2px 6px rgba(9, 12, 24, 0.6);
     }
 
-    .clock-number.six {
-      transform: translate(-50%, -50%) translateX(-8px);
-    }
-
     .digital { text-align: center; }
 
     .digital-time {
@@ -348,6 +347,7 @@
     .mini-icon svg {
       width: 30px;
       height: 30px;
+      display: block;
     }
 
     .mini-time {
@@ -399,11 +399,12 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--card-gap);
       align-items: stretch;
-      grid-auto-rows: 1fr;
+      grid-auto-rows: minmax(0, 1fr);
     }
 
     .bottom-grid .card {
       height: 100%;
+      min-height: 230px;
     }
 
     .weather-card {
@@ -431,24 +432,19 @@
       border-radius: 999px;
       margin: 0;
       background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.45) 1px, transparent 1px);
-      background-size: calc(100% / 8) 100%;
+      background-size: calc(100% / 4) 100%;
       background-repeat: repeat-x;
     }
 
     .summary-timeline-labels {
       display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-      font-size: 0.68rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      font-size: 0.8rem;
       color: var(--muted-strong);
       letter-spacing: 0.2px;
       text-align: center;
       white-space: nowrap;
-    }
-
-    @media (max-width: 600px) {
-      .summary-timeline-labels {
-        font-size: 0.62rem;
-      }
+      font-weight: 600;
     }
 
     .weather-title {
@@ -460,6 +456,9 @@
       gap: 8px;
       text-transform: uppercase;
       font-weight: 600;
+      line-height: 1;
+      min-height: 22px;
+ encourages consistent header alignment */
     }
 
     .weather-subtitle {
@@ -494,6 +493,7 @@
     .condition-icon svg {
       width: 38px;
       height: 38px;
+      display: block;
     }
 
     .condition-text {
@@ -503,8 +503,8 @@
       font-weight: 600;
       font-size: 1.05rem;
       color: var(--accent);
-      line-height: 1.15;
-      transform: translateY(0);
+      line-height: 1;
+      transform: translateY(1px);
     }
 
     .sun-card {
@@ -587,6 +587,7 @@
     .moon-icon-large svg {
       width: 34px;
       height: 34px;
+      display: block;
     }
 
     .moon-phase-label {
@@ -661,32 +662,6 @@
       transform: translateX(-50%) rotate(45deg);
     }
 
-    .sun-curve svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .sun-curve-track {
-      stroke: rgba(255, 255, 255, 0.2);
-    }
-
-    .sun-curve-progress {
-      stroke: url(#sunCurveGradient);
-      filter: drop-shadow(0 0 8px rgba(255, 211, 107, 0.3));
-    }
-
-    .sun-curve-track,
-    .sun-curve-progress {
-      fill: none;
-      stroke-linecap: round;
-    }
-
-    .sun-curve-dot {
-      fill: #ffd36b;
-      stroke: rgba(255, 255, 255, 0.85);
-      stroke-width: 2;
-    }
-
     .metric-icon {
       width: 18px;
       height: 18px;
@@ -697,7 +672,11 @@
       flex: 0 0 auto;
     }
 
-    .metric-icon svg { width: 18px; height: 18px; }
+    .metric-icon svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
 
     .metric-icon.sun { color: var(--icon-sun); }
     .metric-icon.cloud { color: var(--icon-cloud); }
@@ -762,6 +741,33 @@
       margin-top: 6px;
     }
 
+    .mini-timeline {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .mini-timeline-line {
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.45) 1px, transparent 1px);
+      background-size: calc(100% / 4) 100%;
+      background-repeat: repeat-x;
+    }
+
+    .mini-timeline-labels {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      font-size: 0.8rem;
+      color: var(--muted-strong);
+      letter-spacing: 0.2px;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
     .wind-direction {
       display: inline-flex;
       align-items: center;
@@ -780,7 +786,7 @@
       transform-origin: center;
     }
 
-    .wind-arrow svg { width: 16px; height: 16px; }
+    .wind-arrow svg { width: 16px; height: 16px; display: block; }
 
     .sparkline { width: 100%; height: 80px; }
 
@@ -906,17 +912,9 @@
     .skeleton .w-70 { width: 70%; }
     .skeleton .w-80 { width: 80%; }
 
-    .data-card[data-loading="true"] .card-content {
-      display: none;
-    }
-
-    .data-card[data-loading="true"] .skeleton {
-      display: grid;
-    }
-
-    .data-card[data-loading="false"] .skeleton {
-      display: none;
-    }
+    .data-card[data-loading="true"] .card-content { display: none; }
+    .data-card[data-loading="true"] .skeleton { display: grid; }
+    .data-card[data-loading="false"] .skeleton { display: none; }
 
     .card-content {
       display: grid;
@@ -929,7 +927,7 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.18);
       margin-top: 8px;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .aqi-gauge::before {
@@ -938,11 +936,12 @@
       inset: 0;
       background: linear-gradient(90deg, rgba(116, 211, 255, 0.7), rgba(127, 231, 255, 0.7), rgba(255, 211, 107, 0.75), rgba(255, 143, 107, 0.85), rgba(255, 90, 200, 0.9));
       opacity: 0.9;
+      border-radius: 999px;
     }
 
     .aqi-marker {
       position: absolute;
-      top: -7px;
+      top: -6px;
       width: 12px;
       height: 12px;
       border-radius: 50%;
@@ -954,8 +953,8 @@
     .aqi-scale {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-      font-size: 0.62rem;
+      gap: 4px;
+      font-size: 0.6rem;
       color: var(--muted);
       margin-top: 6px;
       text-transform: uppercase;
@@ -964,9 +963,7 @@
       white-space: nowrap;
     }
 
-    .aqi-scale span {
-      text-align: center;
-    }
+    .aqi-scale span { text-align: center; }
 
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
@@ -980,6 +977,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="galaxy"></div>
   <canvas id="stars"></canvas>
@@ -987,6 +985,7 @@
   <div class="container">
     <div class="header">
       <div class="title">Toulon, France</div>
+
       <div class="last-updated">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/>
@@ -994,6 +993,7 @@
         </svg>
         Last updated at <span id="lastUpdated">—</span>
       </div>
+
       <div class="unit-toggle" role="group" aria-label="Wind units">
         <button type="button" class="active" data-unit="kmh">km/h</button>
         <button type="button" data-unit="ms">m/s</button>
@@ -1022,99 +1022,14 @@
             <div class="weather-title">Today summary</div>
             <div class="weather-value" id="summaryTemp">—</div>
             <div class="weather-subtitle">Dew point <span id="dewPoint">—</span></div>
+
             <div class="summary-timeline" aria-hidden="true">
               <div class="summary-timeline-line"></div>
               <div class="summary-timeline-labels">
-                <span>3AM</span>
-                <span>6AM</span>
-                <span>9AM</span>
-                <span>12PM</span>
-                <span>3PM</span>
-                <span>6PM</span>
-                <span>9PM</span>
                 <span>12AM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sun-row">
-          <div class="card sun-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-60"></span>
-              <span class="skeleton-block"></span>
-              <span class="skeleton-line w-80"></span>
-            </div>
-            <div class="card-content">
-              <div class="sun-card-header">
-                <div class="weather-title">
-                  <span class="metric-icon sun" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/>
-                      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2 2M17.5 17.5l2 2M4.5 19.5l2-2M17.5 6.5l2-2"
-                            stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-                    </svg>
-                  </span>
-                  <span id="sunCardTitle">Sunrise</span>
-                </div>
-                <div class="sun-card-time" id="sunCardTime">—</div>
-                <div class="sun-card-sub" id="sunCardSub">—</div>
-              </div>
-              <div class="sun-grid">
-                <div class="sun-curve">
-                  <svg viewBox="0 0 240 80" fill="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="sunCurveGradient" x1="0" y1="0" x2="240" y2="0">
-                        <stop offset="0%" stop-color="#ffd36b"/>
-                        <stop offset="100%" stop-color="#7fe7ff"/>
-                      </linearGradient>
-                    </defs>
-                    <path d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-track"/>
-                    <path id="sunCurveProgress" d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-progress"/>
-                    <circle id="sunCurveDot" cx="10" cy="70" r="6" class="sun-curve-dot"/>
-                  </svg>
-                </div>
-                <div class="sun-grid-labels">
-                  <span>12am</span>
-                  <span>6am</span>
-                  <span>12pm</span>
-                  <span>6pm</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card moon-card data-card" data-section="weather" data-loading="true">
-            <div class="skeleton">
-              <span class="skeleton-line w-60"></span>
-              <span class="skeleton-block"></span>
-              <span class="skeleton-line w-80"></span>
-            </div>
-            <div class="card-content">
-              <div class="weather-title">
-                <span class="metric-icon night" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M15.5 3.5A8.5 8.5 0 1 0 21 17a7.5 7.5 0 0 1-5.5-13.5z"
-                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
-                Moon
-              </div>
-              <div class="moon-visual">
-                <div class="moon-icon-large" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M16 4.5A8 8 0 1 0 20.5 17a7 7 0 0 1-4.5-12.5z"
-                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </div>
-                <div class="moon-phase-label" id="moonPhaseLabel">—</div>
-              </div>
-              <div class="moon-grid">
-                <div class="moon-item"><span>Illumination</span><span id="moonIllumination">—</span></div>
-                <div class="moon-item"><span>Moonrise</span><span id="moonrise">—</span></div>
-                <div class="moon-item"><span>Moonset</span><span id="moonset">—</span></div>
-                <div class="moon-item"><span>Next full moon</span><span id="nextFullMoon">—</span></div>
-                <div class="moon-item"><span>Distance</span><span id="moonDistance">—</span></div>
+                <span>6AM</span>
+                <span>12PM</span>
+                <span>6PM</span>
               </div>
             </div>
           </div>
@@ -1131,6 +1046,94 @@
           </div>
         </div>
 
+        <div class="sun-row">
+          <div class="card sun-card data-card" data-section="weather" data-loading="true">
+            <div class="skeleton">
+              <span class="skeleton-line w-60"></span>
+              <span class="skeleton-block"></span>
+              <span class="skeleton-line w-80"></span>
+            </div>
+
+            <div class="card-content">
+              <div class="sun-card-header">
+                <div class="weather-title">
+                  <span class="metric-icon sun" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/>
+                      <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2 2M17.5 17.5l2 2M4.5 19.5l2-2M17.5 6.5l2-2"
+                            stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  <span id="sunCardTitle">Sunrise</span>
+                </div>
+
+                <div class="sun-card-time" id="sunCardTime">—</div>
+                <div class="sun-card-sub" id="sunCardSub">—</div>
+              </div>
+
+              <div class="sun-grid">
+                <div class="sun-curve">
+                  <svg viewBox="0 0 240 80" fill="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="sunCurveGradient" x1="0" y1="0" x2="240" y2="0">
+                        <stop offset="0%" stop-color="#ffd36b"/>
+                        <stop offset="100%" stop-color="#7fe7ff"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-track"/>
+                    <path id="sunCurveProgress" d="M10 70 Q120 12 230 70" stroke-width="3" class="sun-curve-progress"/>
+                    <circle id="sunCurveDot" cx="10" cy="70" r="6" class="sun-curve-dot"/>
+                  </svg>
+                </div>
+
+                <div class="sun-grid-labels">
+                  <span>12am</span>
+                  <span>6am</span>
+                  <span>12pm</span>
+                  <span>6pm</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card moon-card data-card" data-section="weather" data-loading="true">
+            <div class="skeleton">
+              <span class="skeleton-line w-60"></span>
+              <span class="skeleton-block"></span>
+              <span class="skeleton-line w-80"></span>
+            </div>
+
+            <div class="card-content">
+              <div class="weather-title">
+                <span class="metric-icon night" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M15.5 3.5A8.5 8.5 0 1 0 21 17a7.5 7.5 0 0 1-5.5-13.5z"
+                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                Moon
+              </div>
+
+              <div class="moon-visual">
+                <div class="moon-icon-large" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M16 4.5A8 8 0 1 0 20.5 17a7 7 0 0 1-4.5-12.5z"
+                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="moon-phase-label" id="moonPhaseLabel">—</div>
+              </div>
+
+              <div class="moon-grid">
+                <div class="moon-item"><span>Illumination</span><span id="moonIllumination">—</span></div>
+                <div class="moon-item"><span>Moonrise</span><span id="moonrise">—</span></div>
+                <div class="moon-item"><span>Moonset</span><span id="moonset">—</span></div>
+                <div class="moon-item"><span>Next full moon</span><span id="nextFullMoon">—</span></div>
+                <div class="moon-item"><span>Distance</span><span id="moonDistance">—</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="right-col">
@@ -1151,6 +1154,7 @@
                 </span>
                 Conditions
               </div>
+
               <div class="condition-row">
                 <div id="conditionIcon" class="condition-icon"></div>
                 <div class="condition-text" id="conditionText">—</div>
@@ -1234,10 +1238,12 @@
                 </span>
                 Wind
               </div>
+
               <div class="weather-value" id="wind">—</div>
               <div class="weather-subtitle">
                 Gusts <span id="gusts">—</span> <span class="badge hidden" id="gustAlert">High</span>
               </div>
+
               <div class="wind-direction">
                 <span class="wind-arrow" id="windArrow" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none">
@@ -1247,6 +1253,7 @@
                 </span>
                 <span id="windDir">—</span>
               </div>
+
               <div class="wind-compass" aria-hidden="true">
                 <span class="wind-compass-label n">N</span>
                 <span class="wind-compass-label e">E</span>
@@ -1272,7 +1279,9 @@
                 </span>
                 UV index <span class="badge hidden" id="uvAlert">High</span>
               </div>
+
               <div class="weather-value" id="uv">—</div>
+
               <div class="uv-gauge" aria-hidden="true">
                 <span class="uv-segment low"></span>
                 <span class="uv-segment moderate"></span>
@@ -1281,7 +1290,18 @@
                 <span class="uv-segment extreme"></span>
                 <span class="uv-indicator" id="uvIndicator"></span>
               </div>
+
               <div class="uv-label" id="uvLabel">—</div>
+
+              <div class="mini-timeline" aria-hidden="true">
+                <div class="mini-timeline-line"></div>
+                <div class="mini-timeline-labels">
+                  <span>12AM</span>
+                  <span>6AM</span>
+                  <span>12PM</span>
+                  <span>6PM</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1369,7 +1389,6 @@
               <div class="weather-subtitle">Max rain chance <span id="summaryRain">—</span></div>
             </div>
           </div>
-
         </div>
 
         <div class="bottom-grid">
@@ -1388,10 +1407,13 @@
                 </span>
                 Air quality <span class="badge hidden" id="aqiAlert">Poor</span>
               </div>
+
               <div class="weather-value" id="airQuality">—</div>
+
               <div class="aqi-gauge" aria-hidden="true">
                 <span class="aqi-marker" id="aqiMarker" style="left: 0%;"></span>
               </div>
+
               <div class="aqi-scale" aria-hidden="true">
                 <span>Good</span>
                 <span>Fair</span>
@@ -1417,10 +1439,12 @@
                 </span>
                 24h outlook
               </div>
+
               <svg class="sparkline" viewBox="0 0 300 80">
                 <polyline id="tempLine" class="temp" points=""></polyline>
                 <polyline id="precipLine" class="precip" points=""></polyline>
               </svg>
+
               <div class="weather-subtitle">Mini temp curve + precip probability</div>
             </div>
           </div>
@@ -1444,8 +1468,7 @@
     </div>
   </div>
 
-  <!-- SunCalc required for sunrise, moon, illumination -->
-  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
 
   <script>
     let CITY = "Toulon";
@@ -1459,24 +1482,10 @@
     const state = {
       weather: null,
       air: null,
-      units: {
-        wind: "kmh"
-      }
+      units: { wind: "kmh" }
     };
 
     const $ = (id) => document.getElementById(id);
-
-    function showStatus(details = "") {
-      const card = $("statusCard");
-      const text = $("statusDetails");
-      if (text) text.textContent = details || "";
-      if (card) card.style.display = "block";
-    }
-
-    function hideStatus() {
-      const card = $("statusCard");
-      if (card) card.style.display = "none";
-    }
 
     function formatValue(value, formatter, fallback = "—") {
       if (!Number.isFinite(value)) return fallback;
@@ -1538,11 +1547,7 @@
 
     function applyWindUnit(unit) {
       state.units.wind = unit;
-      try {
-        localStorage.setItem(UNIT_KEY, unit);
-      } catch (e) {
-        return;
-      }
+      try { localStorage.setItem(UNIT_KEY, unit); } catch (e) { return; }
     }
 
     function updateUnitToggle() {
@@ -1555,9 +1560,7 @@
       try {
         const stored = localStorage.getItem(UNIT_KEY);
         if (stored === "kmh" || stored === "ms") state.units.wind = stored;
-      } catch (e) {
-        return;
-      }
+      } catch (e) {}
 
       updateUnitToggle();
       document.querySelectorAll(".unit-toggle button").forEach((btn) => {
@@ -1584,20 +1587,21 @@
 
       const size = clock.clientWidth || 230;
       const center = size / 2;
-      const radius = center - 28;
+      const radius = center - 36;
+
       const numbers = [
-        { label: "12", angle: 0 },
-        { label: "3", angle: 90 },
-        { label: "6", angle: 180, className: "six" },
-        { label: "9", angle: 270 }
+        { label: "12", angle: 0,  dx: 0,  dy: 10 },
+        { label: "3",  angle: 90, dx: -6, dy: 0  },
+        { label: "6",  angle: 180,dx: 0,  dy: -2 },
+        { label: "9",  angle: 270,dx: 6,  dy: 0  }
       ];
 
-      numbers.forEach(({ label, angle, className }) => {
+      numbers.forEach(({ label, angle, dx, dy }) => {
         const number = document.createElement("div");
-        number.className = `clock-number${className ? ` ${className}` : ""}`;
+        number.className = "clock-number";
         const theta = (angle - 90) * (Math.PI / 180);
-        number.style.left = `${center + Math.cos(theta) * radius}px`;
-        number.style.top = `${center + Math.sin(theta) * radius}px`;
+        number.style.left = `${center + Math.cos(theta) * radius + dx}px`;
+        number.style.top = `${center + Math.sin(theta) * radius + dy}px`;
         number.textContent = label;
         fragment.appendChild(number);
       });
@@ -1622,32 +1626,6 @@
       fragment.appendChild(centerDot);
 
       clock.appendChild(fragment);
-    }
-
-    function formatHourMinute(hour, minute) {
-      if (hour == null || minute == null) return "—";
-      const safeHour = String(Number(hour));
-      const safeMinute = String(minute).padStart(2, "0");
-      return `${safeHour}h${safeMinute}`;
-    }
-
-    function formatDateLongFromParts(parts) {
-      return `${parts.weekday}, ${parts.day} ${parts.month} ${parts.year}`;
-    }
-
-    function getTimePartsFromDate(date) {
-      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: TZ,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-      const parts = formatter.formatToParts(date).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-      return { hour: parts.hour, minute: parts.minute };
     }
 
     function updateClock() {
@@ -1683,7 +1661,7 @@
       }, {});
 
       if (dateParts.weekday && dateParts.day && dateParts.month && dateParts.year) {
-        setText("dateString", formatDateLongFromParts(dateParts));
+        setText("dateString", `${dateParts.weekday}, ${dateParts.day} ${dateParts.month} ${dateParts.year}`);
       }
 
       const hourHand = $("hourHand");
@@ -1704,13 +1682,40 @@
       }
     }
 
+    function formatHourMinute(hour, minute) {
+      if (hour == null || minute == null) return "—";
+      const safeHour = String(Number(hour));
+      const safeMinute = String(minute).padStart(2, "0");
+      return `${safeHour}h${safeMinute}`;
+    }
+
+    function getTimePartsFromDate(date) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
+      const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: TZ,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+      const parts = formatter.formatToParts(date).reduce((acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      }, {});
+      return { hour: parts.hour, minute: parts.minute };
+    }
+
     function splitLocalTime(timeValue) {
       if (!timeValue) return null;
       if (timeValue instanceof Date) return getTimePartsFromDate(timeValue);
-      const [, timePart] = timeValue.split("T");
+      const [, timePart] = String(timeValue).split("T");
       if (!timePart) return null;
       const [hour, minute] = timePart.split(":");
       return { hour, minute };
+    }
+
+    function formatTimeHMFromParts(parts) {
+      if (!parts?.hour || !parts?.minute) return "—";
+      return formatHourMinute(parts.hour, parts.minute);
     }
 
     function formatTimeHMFromDate(date) {
@@ -1734,9 +1739,7 @@
         Number(parts.year),
         Number(parts.month) - 1,
         Number(parts.day),
-        12,
-        0,
-        0
+        12, 0, 0
       ));
     }
 
@@ -1745,6 +1748,12 @@
       const hour12 = hourValue % 12 || 12;
       const suffix = hourValue >= 12 ? "PM" : "AM";
       return `${hour12}<span class="ampm">${suffix}</span>`;
+    }
+
+    function updateLastUpdated() {
+      const now = new Date();
+      const parts = getTimePartsFromDate(now);
+      setText("lastUpdated", formatTimeHMFromParts(parts));
     }
 
     function updateLocationDisplay() {
@@ -1765,60 +1774,111 @@
       updateLocationDisplay();
     }
 
-    function updateLastUpdated() {
-      const now = new Date();
-      const parts = getTimePartsFromDate(now);
-      if (!parts) return;
-      setText("lastUpdated", formatHourMinute(parts.hour, parts.minute));
-    }
-
     function weatherLabel(code) {
       const map = {
-        0: "Clear sky",
+        0: "Clear",
         1: "Mainly clear",
         2: "Partly cloudy",
         3: "Overcast",
         45: "Fog",
         48: "Rime fog",
         51: "Light drizzle",
-        53: "Moderate drizzle",
-        55: "Dense drizzle",
+        53: "Drizzle",
+        55: "Heavy drizzle",
         56: "Freezing drizzle",
-        57: "Dense freezing drizzle",
-        61: "Slight rain",
-        63: "Moderate rain",
+        57: "Heavy freezing drizzle",
+        61: "Light rain",
+        63: "Rain",
         65: "Heavy rain",
         66: "Freezing rain",
         67: "Heavy freezing rain",
-        71: "Slight snow",
-        73: "Moderate snow",
+        71: "Light snow",
+        73: "Snow",
         75: "Heavy snow",
         77: "Snow grains",
         80: "Rain showers",
-        81: "Moderate showers",
+        81: "Heavy showers",
         82: "Violent showers",
         85: "Snow showers",
         86: "Heavy snow showers",
         95: "Thunderstorm",
-        96: "Thunderstorm with hail",
-        99: "Thunderstorm with heavy hail"
+        96: "Thunderstorm hail",
+        99: "Severe thunderstorm hail"
       };
-      return map[code] ?? "Weather";
+      return map[code] || "Conditions";
     }
 
     function moonPhaseName(date) {
-      if (!(date instanceof Date)) return "—";
       const phase = SunCalc.getMoonIllumination(date).phase;
-      const p = (phase + 1) % 1;
-
-      if (p < 0.0625 || p >= 0.9375) return "New Moon";
-      if (p < 0.1875) return "Waxing Crescent";
-      if (p < 0.3125) return "First Quarter";
-      if (p < 0.4375) return "Waxing Gibbous";
-      if (p < 0.5625) return "Full Moon";
-      if (p < 0.6875) return "Waning Gibbous";
-      if (p < 0.8125) return "Last Quarter";
+      if (phase < 0.03 || phase > 0.97) return "New Moon";
+      if (phase < 0.22) return "Waxing Crescent";
+      if (phase < 0.28) return "First Quarter";
+      if (phase < 0.47) return "Waxing Gibbous";
+      if (phase < 0.53) return "Full Moon";
+      if (phase < 0.72) return "Waning Gibbous";
+      if (phase < 0.78) return "Last Quarter";
       return "Waning Crescent";
+    }
+
+    function loadWeather() {
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,pressure_msl,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m,visibility,dew_point_2m,uv_index,is_day,rain&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&daily=sunrise,sunset&forecast_days=2`;
+      setSectionLoading("weather", true);
+
+      fetch(weatherUrl)
+        .then((res) => res.ok ? res.json() : Promise.reject(res))
+        .then((data) => {
+          state.weather = normalizeWeather(data);
+          renderWeather(state.weather);
+          updateLastUpdated();
+          setSectionLoading("weather", false);
+          triggerSectionFade("weather");
+        })
+        .catch((err) => {
+          console.error("Weather fetch failed", err);
+          if (!state.weather) {
+            state.weather = buildDemoWeather();
+            renderWeather(state.weather);
+          }
+          setSectionLoading("weather", false);
+          triggerSectionFade("weather");
+        });
+    }
+
+    function loadAirQuality() {
+      const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=us_aqi`;
+      setSectionLoading("air", true);
+
+      fetch(airUrl)
+        .then((res) => res.ok ? res.json() : Promise.reject(res))
+        .then((data) => {
+          state.air = data;
+          renderAirQuality(state.air);
+          setSectionLoading("air", false);
+          triggerSectionFade("air");
+        })
+        .catch((err) => {
+          console.error("Air quality fetch failed", err);
+          if (!state.air) state.air = buildDemoAirQuality();
+          renderAirQuality(state.air);
+          setSectionLoading("air", false);
+          triggerSectionFade("air");
+        });
+    }
+
+    function normalizeWeather(data) {
+      if (!data || !data.current) return buildDemoWeather();
+
+      const current = { ...data.current };
+      current.time = new Date(current.time);
+
+      const hourly = { ...data.hourly };
+      hourly.time = (hourly.time || []).map((t) => new Date(t));
+
+      const daily = { ...data.daily };
+      daily.sunrise = (daily.sunrise || []).map((t) => new Date(t));
+      daily.sunset = (daily.sunset || []).map((t) => new Date(t));
+
+      return { current, hourly, daily };
     }
 
     function weatherIcon(code) {
@@ -1855,7 +1915,7 @@
         </svg>`;
       }
 
-      if ((code >= 51 && code <= 57) || (code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
+      if ((code >= 51 && code <= 57) || (code >= 61 && code <= 67)) {
         return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${cloud}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 36h30a12 12 0 0 0 0-24 18 18 0 0 0-35 5A9 9 0 0 0 18 36z" />
           <path d="M22 44l-4 8M32 44l-4 8M42 44l-4 8" stroke="${rain}" />
@@ -1879,22 +1939,6 @@
       return `<svg width="40" height="40" viewBox="0 0 64 64" fill="none" stroke="${night}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M36 10a18 18 0 1 0 18 18 14 14 0 0 1-18-18z" />
       </svg>`;
-    }
-
-    function normalizeWeather(data) {
-      if (!data || !data.current) return buildDemoWeather();
-
-      const current = { ...data.current };
-      current.time = new Date(current.time);
-
-      const hourly = { ...data.hourly };
-      hourly.time = (hourly.time || []).map((t) => new Date(t));
-
-      const daily = { ...data.daily };
-      daily.sunrise = (daily.sunrise || []).map((t) => new Date(t));
-      daily.sunset = (daily.sunset || []).map((t) => new Date(t));
-
-      return { current, hourly, daily };
     }
 
     function buildDemoWeather() {
@@ -1957,11 +2001,7 @@
     }
 
     function buildDemoAirQuality() {
-      return {
-        current: {
-          us_aqi: 42
-        }
-      };
+      return { current: { us_aqi: 42 } };
     }
 
     function renderAirQuality(data) {
@@ -2120,10 +2160,12 @@
       const probs = data.hourly?.precipitation_probability || [];
       const currentTime = data.current?.time;
       const nowDate = currentTime instanceof Date ? currentTime : new Date();
+
       const startIndex = times.findIndex((t) => {
         const timeDate = t instanceof Date ? t : new Date(t);
         return timeDate >= nowDate;
       });
+
       const index = startIndex >= 0 ? startIndex : 0;
       const endIndex = Math.min(index + 24, temps.length);
 
@@ -2140,9 +2182,7 @@
       const maxTemp = tempSlice.length ? Math.max(...tempSlice) : null;
       const maxProb = probSlice.length ? Math.max(...probSlice) : null;
 
-      const tempLabel = minTemp == null || maxTemp == null
-        ? "—"
-        : `${Math.round(minTemp)}° / ${Math.round(maxTemp)}°`;
+      const tempLabel = minTemp == null || maxTemp == null ? "—" : `${Math.round(minTemp)}° / ${Math.round(maxTemp)}°`;
       const probLabel = maxProb == null ? "—" : `${Math.round(maxProb)}%`;
 
       setText("summaryTemp", tempLabel);
@@ -2154,8 +2194,8 @@
       const total = Math.max(0, Math.round(minutes));
       const hrs = Math.floor(total / 60);
       const mins = total % 60;
-      if (hrs === 0) return `${mins}m`;
-      return `${hrs}h ${mins}m`;
+      if (hrs === 0) return `${mins} m`;
+      return `${hrs} h ${mins} m`;
     }
 
     function renderSunCard(data) {
@@ -2229,7 +2269,7 @@
 
     function formatDateDayMonth(date) {
       if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "—";
-      return new Intl.DateTimeFormat("fr-FR", {
+      return new Intl.DateTimeFormat("en-GB", {
         timeZone: TZ,
         day: "2-digit",
         month: "short"
@@ -2238,9 +2278,10 @@
 
     function renderMoonCard(data) {
       const now = data.current?.time instanceof Date ? data.current.time : new Date();
+
       const illumination = SunCalc.getMoonIllumination(now);
       const illuminationPct = Math.round(illumination.fraction * 100);
-      setText("moonIllumination", `${illuminationPct}%`);
+      setText("moonIllumination", `${illuminationPct} %`);
 
       const moonTimes = SunCalc.getMoonTimes(getZonedDate(now, TZ), LAT, LON, true);
       const riseLabel = moonTimes?.rise ? formatTimeHMFromDate(moonTimes.rise) : "—";
@@ -2316,15 +2357,13 @@
       const uvValue = Number(current.uv_index);
       const gustValue = Number(current.wind_gusts_10m);
 
-      if (uvAlert) uvAlert.classList.toggle("hidden", !(uvValue > 6));
-      if (gustAlert) gustAlert.classList.toggle("hidden", !(gustValue > 40));
+      uvAlert.classList.toggle("hidden", !(uvValue > 6));
+      gustAlert.classList.toggle("hidden", !(gustValue > 40));
 
-      if (aqiAlert) {
-        if (state.air?.current?.us_aqi != null) {
-          aqiAlert.classList.toggle("hidden", !(Number(state.air.current.us_aqi) > 100));
-        } else {
-          aqiAlert.classList.add("hidden");
-        }
+      if (state.air?.current?.us_aqi != null) {
+        aqiAlert.classList.toggle("hidden", !(Number(state.air.current.us_aqi) > 100));
+      } else {
+        aqiAlert.classList.add("hidden");
       }
     }
 
@@ -2351,17 +2390,10 @@
 
     function initStars() {
       const canvas = $("stars");
-      if (!canvas) return;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return;
 
       let w, h;
-      const starColors = [
-        "255,255,255",
-        "180,210,255",
-        "255,200,230",
-        "255,180,200"
-      ];
+      const starColors = ["255,255,255", "180,210,255", "255,200,230", "255,180,200"];
       const stars = Array.from({ length: 260 }, () => ({
         x: Math.random(),
         y: Math.random(),
@@ -2397,69 +2429,6 @@
       draw();
     }
 
-    function loadWeather() {
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,pressure_msl,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m,visibility,dew_point_2m,uv_index,is_day,rain&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&daily=sunrise,sunset&forecast_days=2`;
-      setSectionLoading("weather", true);
-
-      fetch(weatherUrl)
-        .then((res) => res.ok ? res.json() : Promise.reject(res))
-        .then((data) => {
-          try {
-            state.weather = normalizeWeather(data);
-            renderWeather(state.weather);
-            hideStatus();
-          } catch (e) {
-            console.error("Weather render failed", e);
-            showStatus(String(e?.message || e || "Render error"));
-          }
-          updateLastUpdated();
-        })
-        .catch((err) => {
-          console.error("Weather fetch failed", err);
-          try {
-            if (!state.weather) state.weather = buildDemoWeather();
-            renderWeather(state.weather);
-            showStatus("Live weather fetch failed, showing demo data");
-          } catch (e) {
-            console.error("Demo render failed", e);
-            showStatus(String(e?.message || e || "Demo render error"));
-          }
-        })
-        .finally(() => {
-          setSectionLoading("weather", false);
-          triggerSectionFade("weather");
-        });
-    }
-
-    function loadAirQuality() {
-      const airUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}&timezone=${TZ}&current=us_aqi`;
-      setSectionLoading("air", true);
-
-      fetch(airUrl)
-        .then((res) => res.ok ? res.json() : Promise.reject(res))
-        .then((data) => {
-          try {
-            state.air = data;
-            renderAirQuality(state.air);
-          } catch (e) {
-            console.error("Air render failed", e);
-          }
-        })
-        .catch((err) => {
-          console.error("Air quality fetch failed", err);
-          if (!state.air) state.air = buildDemoAirQuality();
-          try {
-            renderAirQuality(state.air);
-          } catch (e) {
-            console.error("Demo air render failed", e);
-          }
-        })
-        .finally(() => {
-          setSectionLoading("air", false);
-          triggerSectionFade("air");
-        });
-    }
-
     function init() {
       initLocation();
       buildClockFace();
@@ -2472,13 +2441,10 @@
       setInterval(loadWeather, REFRESH_MS);
       setInterval(loadAirQuality, REFRESH_MS);
 
-      const refresh = $("refreshBtn");
-      if (refresh) {
-        refresh.addEventListener("click", () => {
-          loadWeather();
-          loadAirQuality();
-        });
-      }
+      $("refreshBtn").addEventListener("click", () => {
+        loadWeather();
+        loadAirQuality();
+      });
 
       initStars();
 
